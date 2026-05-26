@@ -11,6 +11,7 @@ This repository contains everything you need to set up Claude Code:
 | **Skills** | 9arm Skills | Engineering & productivity skills (debug, review, docs) |
 | **Skills** | Ruflo Skills | Advanced multi-agent workflows (swarm, autopilot) |
 | **Skills** | feiskyer Skills | Additional utilities (autonomous, codex, github) |
+| **Skills** | Official Plugins | Code review, automation, CLAUDE.md management |
 | **Tools** | RTK | Token-optimized CLI (60-90% savings) |
 
 ## Repository Structure
@@ -137,6 +138,53 @@ cd ~/.claude/plugins/ClaudeSkills-Neronain
 - `kiro-skill`, `nanobanana-skill`, `reflection`, `skill-creator`
 - `spec-kit-skill`, `translate`, `youtube-transcribe-skill`
 
+### Official Plugins (New!)
+
+#### PR Review Toolkit (6 agents) - Automated Code Review
+
+| Skill | Description |
+|-------|-------------|
+| `/code-reviewer` | General code review for project guidelines |
+| `/code-simplifier` | Code simplification and refactoring |
+| `/comment-analyzer` | Code comment accuracy and maintainability |
+| `/pr-test-analyzer` | Test coverage quality and completeness |
+| `/silent-failure-hunter` | Error handling and silent failures |
+| `/type-design-analyzer` | Type design quality and invariants |
+
+#### CLAUDE.md Management
+
+| Skill | Description |
+|-------|-------------|
+| `/claude-md-improver` | Audit and improve CLAUDE.md files |
+| `/revise-claude-md` | Capture session learnings into CLAUDE.md |
+
+#### Hookify - Automation Rules
+
+| Skill | Description |
+|-------|-------------|
+| `/hookify` | Create hooks from conversation patterns |
+| `/hookify:configure` | Configure rules interactively |
+| `/hookify:list` | List all active rules |
+| `/hookify:help` | Get hookify help |
+
+#### Feature Development
+
+| Skill | Description |
+|-------|-------------|
+| `/feature-dev` | 7-phase feature development workflow |
+
+#### Code Review
+
+| Skill | Description |
+|-------|-------------|
+| `/code-review` | Automated PR review with multiple agents |
+
+#### Claude Code Setup
+
+| Skill | Description |
+|-------|-------------|
+| `/claude-automation-recommender` | Recommend automations (hooks, subagents, skills) |
+
 ## Available Tools
 
 ### RTK - Rust Token Killer
@@ -160,9 +208,22 @@ cd ~/.claude/plugins/ClaudeSkills-Neronain
 
 # Code Review
 /scrutinize
-
-# Documentation
 /post-mortem
+
+# Automated PR Review (Official Plugin)
+/code-review
+/code-reviewer
+/code-simplifier
+
+# Feature Development (Official Plugin)
+/feature-dev
+
+# CLAUDE.md Management (Official Plugin)
+/claude-md-improver
+/revise-claude-md
+
+# Hookify - Create Automation Rules (Official Plugin)
+/hookify
 
 # Leadership Updates
 /management-talk
