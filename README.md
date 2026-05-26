@@ -1,6 +1,6 @@
 # ClaudeSkills-Neronain
 
-All-in-one Claude Code setup with **Skills** and **Tools** for LMS Development.
+All-in-one Claude Code setup with **Skills** and **Tools** .
 
 ## What's Included
 
