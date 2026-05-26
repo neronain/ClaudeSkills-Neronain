@@ -68,7 +68,16 @@ Add this marketplace in settings:
 
 ## Available Skills
 
-### Ruflo Skills (7 skills)
+### 9arm Skills (4 skills) - **New!**
+
+| Skill | Category | Description |
+|-------|----------|-------------|
+| `debug-mantra` | Engineering | Four-mantra debugging discipline for systematic bug fixing |
+| `scrutinize` | Engineering | Outsider-perspective PR/code review with trace verification |
+| `post-mortem` | Engineering | Canonical bug fix record (root cause, fix, validation) |
+| `management-talk` | Productivity | Rewrite engineer content for leadership (VPs, PMs, execs) |
+
+### Ruflo Skills (11 skills)
 
 | Skill | Description |
 |-------|-------------|
@@ -89,22 +98,6 @@ Add this marketplace in settings:
 | `discover-plugins` | Discover and recommend ruflo plugins |
 
 ### feiskyer claude-code-settings Skills (14 skills)
-
-- `autonomous-skill` - Multi-session task execution
-- `codex-skill` - Code generation and analysis
-- `command-creator` - Create custom commands
-- `deep-research` - Comprehensive research tasks
-- `eureka` - Idea generation and discovery
-- `github-fix-issue` - Fix GitHub issues
-- `github-review-pr` - Review GitHub pull requests
-- `gpt-image-skill` - Image generation
-- `kiro-skill` - Kiro assistant functionality
-- `nanobanana-skill` - Nanobanana assistant
-- `reflection` - Self-reflection and improvement
-- `skill-creator` - Create new skills
-- `spec-kit-skill` - Specification and testing kit
-- `translate` - Translation assistance
-- `youtube-transcribe-skill` - YouTube video transcription
 
 ## Usage
 
