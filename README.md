@@ -1,48 +1,61 @@
 # ClaudeSkills-Neronain
 
-My custom skills and configuration for Claude Code - All-in-one setup for Klassio LMS development.
+All-in-one Claude Code setup with **Skills** and **Tools** for LMS Development.
 
 ## What's Included
 
-This repository contains everything needed to set up Claude Code for Klassio LMS development:
+This repository contains everything you need to set up Claude Code:
 
-| Component | Description |
-|-----------|-------------|
-| **9arm Skills** | Engineering & productivity skills (debug, review, docs) |
-| **Ruflo Skills** | Advanced multi-agent workflows (swarm, autopilot, intelligence) |
-| **feiskyer Skills** | Additional utilities (autonomous, codex, github tools) |
-| **rtk CLI** | Token-optimized command wrapper (60-90% savings) |
-| **Hooks** | Pre-tool hooks for command rewriting |
+| Type | Name | Description |
+|------|------|-------------|
+| **Skills** | 9arm Skills | Engineering & productivity skills (debug, review, docs) |
+| **Skills** | Ruflo Skills | Advanced multi-agent workflows (swarm, autopilot) |
+| **Skills** | feiskyer Skills | Additional utilities (autonomous, codex, github) |
+| **Tools** | RTK | Token-optimized CLI (60-90% savings) |
+
+## Repository Structure
+
+```
+ClaudeSkills-Neronain/
+├── skills/           # Agent skills
+│   ├── engineering/  # Debug, review, docs
+│   ├── productivity/ # Management, communication
+│   ├── misc/         # Rarely used skills
+│   └── ...
+├── tools/            # CLI tools
+│   └── rtk/          # Token optimizer
+│       ├── hooks/    # Pre-tool hooks
+│       └── docs/     # Tool documentation
+├── hooks/            # Global hooks
+│   └── rtk-rewrite.sh
+└── scripts/          # Utility scripts
+    ├── link-skills.sh
+    └── list-skills.sh
+```
 
 ## Installation (New Machine)
 
-### Step 1: Install Homebrew (if not installed)
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-### Step 2: Install Dependencies
+### Step 1: Install Dependencies
 
 ```bash
 brew install rtk jq
 ```
 
-### Step 3: Clone This Repository
+### Step 2: Clone This Repository
 
 ```bash
 cd ~/.claude/plugins
 git clone https://github.com/neronain/ClaudeSkills-Neronain.git
 ```
 
-### Step 4: Install 9arm Skills (Symlink)
+### Step 3: Install Skills (Symlink)
 
 ```bash
 cd ~/.claude/plugins/ClaudeSkills-Neronain
 ./scripts/link-skills.sh
 ```
 
-### Step 5: Enable Plugins in `~/.claude/settings.json`
+### Step 4: Enable Plugins in `~/.claude/settings.json`
 
 ```json
 {
@@ -88,9 +101,9 @@ cd ~/.claude/plugins/ClaudeSkills-Neronain
 }
 ```
 
-### Step 6: Restart Claude Code
+### Step 5: Restart Claude Code
 
-## Skills Overview
+## Available Skills
 
 ### 9arm Skills (4 skills) - Daily Workflow
 
@@ -124,9 +137,22 @@ cd ~/.claude/plugins/ClaudeSkills-Neronain
 - `kiro-skill`, `nanobanana-skill`, `reflection`, `skill-creator`
 - `spec-kit-skill`, `translate`, `youtube-transcribe-skill`
 
-## Usage
+## Available Tools
 
-### Quick Start Commands
+### RTK - Rust Token Killer
+
+**60-90% token savings** on LLM operations
+
+**Key Commands:**
+- `rtk git status` - Filtered git status (~90% savings)
+- `rtk pnpm list` - Compact dependency tree (~70% savings)
+- `rtk cargo test` - Failures only (~90% savings)
+
+**Auto-Rewrite:**
+- `git status` → `rtk git status` (transparent)
+- `npm list` → `rtk pnpm list` (transparent)
+
+## Quick Start Commands
 
 ```bash
 # Debugging
@@ -146,32 +172,6 @@ cd ~/.claude/plugins/ClaudeSkills-Neronain
 
 # Documentation Gen
 /doc-gen
-```
-
-### rtk Commands (Auto-Rewritten)
-
-```bash
-rtk git status      # Auto-rewritten to save tokens
-rtk npx create-react-app
-rtk npm install
-```
-
-## Project Structure
-
-```
-ClaudeSkills-Neronain/
-├── skills/               # All skill directories
-│   ├── engineering/     # Debug, review, docs
-│   ├── productivity/    # Management, communication
-│   ├── misc/            # Rarely used skills
-│   └── ...
-├── hooks/               # Pre-tool hooks
-│   └── rtk-rewrite.sh   # Command rewriting
-├── scripts/             # Utility scripts
-│   ├── link-skills.sh   # Symlink skills to Claude
-│   └── list-skills.sh   # List all available skills
-├── CLAUDE.md           # Skill configuration rules
-└── INSTALL.md          # Detailed installation guide
 ```
 
 ## Requirements
