@@ -6,53 +6,91 @@ All-in-one Claude Code setup with **Skills** and **Tools** .
 
 This repository contains everything you need to set up Claude Code:
 
-| Type | Name | Description |
-|------|------|-------------|
-| **Skills** | 9arm Skills | Engineering & productivity skills (debug, review, docs) |
-| **Skills** | Ruflo Skills | Advanced multi-agent workflows (swarm, autopilot) |
-| **Skills** | feiskyer Skills | Additional utilities (autonomous, codex, github) |
-| **Skills** | Official Plugins | Code review, automation, CLAUDE.md management |
-| **Skills** | Connect (Composio) | 500+ SaaS integrations (Gmail, Slack, GitHub, Notion, Jira) |
-| **Skills** | Playwright | Browser automation for web testing |
-| **Agents** | Security Auditor | Security vulnerability scanning, OWASP, compliance |
-| **Tools** | RTK | Token-optimized CLI (60-90% savings) |
+| Type | Count | Description |
+|------|-------|-------------|
+| **Skills** | 40+ | Engineering, productivity, web quality, automation, AI workflows |
+| **Agents** | 17 | Specialized AI agents (fullstack, security, devops, LLM, etc.) |
+| **Commands** | 12 | Slash commands for code, UI, DB, deploy, a11y, testing |
+| **Hooks** | 1 | RTK hook for 60-90% token savings |
+| **Tools** | RTK | Token-optimized CLI proxy |
 
-## New Skills (Composio + Playwright)
+## All 17 Agents
+
+| Agent | Description |
+|-------|-------------|
+| `@fullstack-developer` | Full-stack app development, REST APIs, architecture |
+| `@frontend-developer` | React, CSS, accessible UI components |
+| `@backend-developer` | Server-side logic, databases, APIs |
+| `@typescript-pro` | TypeScript patterns, generics, type safety |
+| `@python-pro` | Python async, data processing, scripting |
+| `@rust-engineer` | Rust ownership, performance, systems programming |
+| `@nextjs-developer` | Next.js App Router, Server Components, SSR |
+| `@api-designer` | OpenAPI specs, REST design, GraphQL |
+| `@devops-engineer` | CI/CD pipelines, Docker, infrastructure |
+| `@kubernetes-specialist` | K8s manifests, Helm charts, cluster management |
+| `@database-administrator` | SQL optimization, schema design, migrations |
+| `@llm-architect` | RAG pipelines, prompt engineering, AI apps |
+| `@security-auditor` | OWASP Top 10, dependency audit, secret detection |
+| `@penetration-tester` | Web app security testing (authorized only) |
+| `@architect-reviewer` | System design review, architecture decisions |
+| `@project-manager` | Sprint planning, backlog management |
+| `@productivity-specialist` | Workflow automation, efficiency optimization |
+
+## Key Skills
 
 | Skill | Description | Use Case |
 |-------|-------------|----------|
-| `/connect` | 500+ SaaS integrations | Gmail, Slack, GitHub, Notion, Jira, Asana, Trello, Linear, HubSpot, Salesforce, Stripe, and more |
-| `/playwright` | Browser automation | Web testing, scraping, screenshot capture, form automation |
+| `/connect` | 500+ SaaS integrations | Gmail, Slack, GitHub, Notion, Jira, and more |
+| `/playwright` | Browser automation | Web testing, scraping, form automation |
+| `/debug-mantra` | 4-step debugging discipline | Any debugging session |
+| `/scrutinize` | Code review & audit | PR review, second opinion |
+| `/post-mortem` | Bug fix documentation | After fixing a bug |
+| `/management-talk` | Convert tech content for leadership | Status updates, reports |
+| `/feature-dev` | 7-phase feature development | Building new features |
+| `/code-review` | Automated PR review | Pull request review |
+| `/hookify` | Create automation hooks | Prevent unwanted behaviors |
+| `/tdd-workflow` | TDD London School | Test-driven development |
+| `/doc-gen` | Documentation generation | Auto-generate docs |
 
-## New Agents
+## Commands (Slash)
 
-| Agent | Description | Use Case |
-|-------|-------------|----------|
-| `/security-auditor` | Security vulnerability scanning | OWASP Top 10 checks, dependency audit, secret detection, compliance (GDPR, PCI-DSS) |
+| Command | Description |
+|---------|-------------|
+| `/a11y` | Accessibility audit (WCAG 2.1 AA) |
+| `/api` | API route generator (Next.js) |
+| `/db` | Database & Prisma helper |
+| `/debug` | Debug assistant |
+| `/deploy` | Deploy checklist |
+| `/design` | Full page design review |
+| `/perf` | Performance audit |
+| `/refactor` | Code refactor |
+| `/responsive` | Responsive design fixer |
+| `/test` | Test generator |
+| `/ui` | UI component generator |
+| `/ux` | UX/UI review |
 
 ## Repository Structure
 
 ```
 ClaudeSkills-Neronain/
-├── skills/           # Agent skills
-│   ├── engineering/  # Debug, review, docs
-│   ├── productivity/ # Management, communication
-│   ├── misc/         # Rarely used skills
-│   └── ...
+├── skills/           # 40+ skills
+│   ├── engineering/  # debug-mantra, post-mortem, scrutinize
+│   ├── productivity/ # management-talk
+│   ├── misc/         # Rarely used
+│   ├── connect/      # Composio SaaS integrations
+│   ├── playwright/   # Browser automation
+│   └── ...           # Web quality, AI, hookify, code review
+├── agents/           # 17 specialized AI agents
+├── commands/         # 12 slash commands (a11y, api, db, deploy, etc.)
 ├── tools/            # CLI tools
 │   ├── rtk/          # Token optimizer
-│   └── mcp/          # MCP server configurations (GitHub, Postgres, Search, etc.)
+│   └── mcp/          # MCP server configs
 ├── hooks/            # Global hooks
 │   └── rtk-rewrite.sh
 ├── configs/          # Configuration examples
-│   ├── settings-snippet.json   # Complete settings.json reference
-│   ├── hooks-reference.md      # Hook documentation
-│   └── rtk-hook-guide.md       # RTK hook setup guide
 ├── scripts/          # Utility scripts
-│   ├── link-skills.sh
-│   └── update-from-github.sh
-├── agents/           # 17 specialized AI agents
-└── skills/           # Agent skills
+└── .claude-plugin/   # Plugin manifest
+    └── plugin.json
 ```
 
 ## Installation (New Machine)

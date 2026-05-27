@@ -1,4 +1,5 @@
 ---
+name: hookify-help
 description: Get help with the hookify plugin
 allowed-tools: ["Read"]
 ---

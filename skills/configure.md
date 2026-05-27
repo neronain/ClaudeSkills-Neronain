@@ -1,4 +1,5 @@
 ---
+name: hookify-configure
 description: Enable or disable hookify rules interactively
 allowed-tools: ["Glob", "Read", "Edit", "AskUserQuestion", "Skill"]
 ---
