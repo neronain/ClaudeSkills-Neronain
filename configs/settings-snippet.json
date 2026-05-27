@@ -1,0 +1,92 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_FLOW_V3_ENABLED": "true"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(rtk git *)",
+      "Bash(rtk npm *)",
+      "Bash(rtk pnpm *)",
+      "Bash(rtk docker *)",
+      "Bash(rtk kubectl *)",
+      "Bash(rtk gh *)",
+      "Bash(rtk find *)",
+      "Bash(rtk gain *)",
+      "Read(//Users/tananan/.claude/plugins/**)",
+      "Read(//Users/tananan/claude/**)",
+      "WebFetch()",
+      "WebSearch()"
+    ]
+  },
+  "model": "qwen3-coder",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/plugins/ClaudeSkills-Neronain/hooks/rtk-rewrite.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/Users/tananan/.claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "ruflo-core@ruflo": true,
+    "ruflo-swarm@ruflo": true,
+    "ruflo-autopilot@ruflo": true,
+    "ruflo-intelligence@ruflo": true,
+    "ruflo-security-audit@ruflo": true,
+    "ruflo-testgen@ruflo": true,
+    "ruflo-docs@ruflo": true,
+    "claude-code-settings@feiskyer/claude-code-settings": true
+  },
+  "extraKnownMarketplaces": {
+    "ruflo": {
+      "source": {
+        "source": "directory",
+        "path": "~/.claude/ruflo"
+      },
+      "autoUpdate": false
+    },
+    "neronain/ClaudeSkills-Neronain": {
+      "source": {
+        "source": "directory",
+        "path": "~/.claude/plugins/ClaudeSkills-Neronain"
+      },
+      "autoUpdate": false
+    }
+  },
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-github-token-here"
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://localhost:5432/mydb?user=postgres"],
+      "env": {
+        "DATABASE_URL": "postgresql://localhost:5432/mydb?user=postgres"
+      }
+    },
+    "exa": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-exa"],
+      "env": {
+        "EXA_API_KEY": "your-exa-key-here"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "editorMode": "normal"
+}
