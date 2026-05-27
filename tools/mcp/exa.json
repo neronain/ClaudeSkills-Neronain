@@ -1,0 +1,7 @@
+{
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-exa"],
+  "env": {
+    "EXA_API_KEY": "your-exa-key-here"
+  }
+}

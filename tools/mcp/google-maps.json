@@ -1,0 +1,7 @@
+{
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-google-maps"],
+  "env": {
+    "GOOGLE_API_KEY": "your-google-maps-key-here"
+  }
+}
