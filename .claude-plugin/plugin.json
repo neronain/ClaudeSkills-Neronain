@@ -1,9 +1,12 @@
 {
-  "name": "9arm-skills",
+  "name": "ClaudeSkills-Neronain",
   "skills": [
     "./skills/engineering/debug-mantra",
     "./skills/engineering/post-mortem",
     "./skills/engineering/scrutinize",
-    "./skills/productivity/management-talk"
+    "./skills/productivity/management-talk",
+    "./skills/connect",
+    "./skills/playwright",
+    "./agents/security-auditor"
   ]
 }

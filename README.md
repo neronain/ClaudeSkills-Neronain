@@ -12,7 +12,23 @@ This repository contains everything you need to set up Claude Code:
 | **Skills** | Ruflo Skills | Advanced multi-agent workflows (swarm, autopilot) |
 | **Skills** | feiskyer Skills | Additional utilities (autonomous, codex, github) |
 | **Skills** | Official Plugins | Code review, automation, CLAUDE.md management |
+| **Skills** | Connect (Composio) | 500+ SaaS integrations (Gmail, Slack, GitHub, Notion, Jira) |
+| **Skills** | Playwright | Browser automation for web testing |
+| **Agents** | Security Auditor | Security vulnerability scanning, OWASP, compliance |
 | **Tools** | RTK | Token-optimized CLI (60-90% savings) |
+
+## New Skills (Composio + Playwright)
+
+| Skill | Description | Use Case |
+|-------|-------------|----------|
+| `/connect` | 500+ SaaS integrations | Gmail, Slack, GitHub, Notion, Jira, Asana, Trello, Linear, HubSpot, Salesforce, Stripe, and more |
+| `/playwright` | Browser automation | Web testing, scraping, screenshot capture, form automation |
+
+## New Agents
+
+| Agent | Description | Use Case |
+|-------|-------------|----------|
+| `/security-auditor` | Security vulnerability scanning | OWASP Top 10 checks, dependency audit, secret detection, compliance (GDPR, PCI-DSS) |
 
 ## Repository Structure
 
@@ -233,6 +249,24 @@ cd ~/.claude/plugins/ClaudeSkills-Neronain
 
 # Documentation Gen
 /doc-gen
+
+# Connect (Composio SaaS)
+/connect slack send-message --channel "#general" --text "Hello!"
+/connect github create-issue --repo "owner/repo" --title "Bug"
+/connect jira create-issue --project "PROJ" --summary "..."
+/connect gmail send-email --to "user@example.com" --subject "Subject"
+
+# Playwright (Browser Automation)
+/playwright open https://example.com
+/playwright click "text=Get Started"
+/playwright fill "#email" "test@example.com"
+/playwright screenshot /tmp/page.png
+
+# Security Auditor
+/security-auditor code ./src/api
+/security-auditor deps package.json
+/security-auditor secrets ./
+/security-auditor compliance gdpr
 ```
 
 ## Requirements
@@ -281,6 +315,26 @@ cat ~/.claude/settings.json
 # Check plugin directory exists
 ls -la ~/.claude/plugins/ClaudeSkills-Neronain/
 ```
+
+## Updating Skills from GitHub
+
+To update skills from the official GitHub repositories:
+
+```bash
+cd ~/.claude/plugins/ClaudeSkills-Neronain
+./scripts/update-from-github.sh
+```
+
+This will clone/update repositories:
+- [ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)
+- [davila7/claude-code-templates](https://github.com/davila7/claude-code-templates)
+- [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents)
+- [rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/awesome-claude-code-toolkit)
+- [anthropics/claude-code](https://github.com/anthropics/claude-code)
+- [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done)
+- [FlorianBruniaux/claude-code-ultimate-guide](https://github.com/FlorianBruniaux/claude-code-ultimate-guide)
+- [affaan-m/ECC](https://github.com/affaan-m/ECC)
+- [shareAI-lab/learn-claude-code](https://github.com/shareAI-lab/learn-claude-code)
 
 ## License
 
