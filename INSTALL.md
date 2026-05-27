@@ -1,40 +1,77 @@
 # Installation Guide
 
-## Quick Start
+## Quick Start (Recommended)
 
 ```bash
-cd ~/.claude/plugins
-git clone https://github.com/neronain/ClaudeSkills-Neronain.git
-```
+# Clone the repo
+git clone https://github.com/neronain/ClaudeSkills-Neronain.git ~/claude/ClaudeSkills-Neronain
 
-Then enable in `settings.json` (see README.md for configuration).
+# Install skills, agents, and commands
+cd ~/claude/ClaudeSkills-Neronain
+./scripts/link-skills.sh
+
+# Restart Claude Code to load everything
+```
 
 ## Detailed Installation Steps
 
-### Step 1: Locate Your Claude Code Plugins Directory
-
-The default locations:
-
-- **macOS/Linux**: `~/.claude/plugins`
-- **Windows**: `%APPDATA%\Claude\plugins` or `%USERPROFILE%\AppData\Roaming\Claude\plugins`
-
-Verify the location:
-```bash
-ls -la ~/.claude/plugins
-```
-
-### Step 2: Clone This Repository
+### Step 1: Clone Repository
 
 ```bash
-cd ~/.claude/plugins
-git clone https://github.com/neronain/ClaudeSkills-Neronain.git
+git clone https://github.com/neronain/ClaudeSkills-Neronain.git ~/claude/ClaudeSkills-Neronain
 ```
 
-This creates `~/.claude/plugins/ClaudeSkills-Neronain/`
+### Step 2: Install Skills, Agents, and Commands
 
-### Step 3: Configure Settings
+```bash
+cd ~/claude/ClaudeSkills-Neronain
+./scripts/link-skills.sh
+```
 
-Edit `~/.claude/settings.json`:
+This installs to:
+- `~/.claude/skills/` — 40+ skills
+- `~/.claude/agents/` — 17 specialized agents
+- `~/.claude/commands/` — 12 slash commands
+
+To force-overwrite existing files (after a `git pull`):
+```bash
+./scripts/link-skills.sh --force
+```
+
+### Step 3: Install RTK Hook (Token Savings)
+
+```bash
+# Install rtk and jq (macOS)
+brew install rtk jq
+
+# Copy RTK hook to Claude hooks directory
+mkdir -p ~/.claude/hooks
+cp ~/claude/ClaudeSkills-Neronain/hooks/rtk-rewrite.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/rtk-rewrite.sh
+```
+
+Then add to `~/.claude/settings.json`:
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/rtk-rewrite.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Step 4: Enable Ruflo Plugins (Optional)
+
+If you have the Ruflo plugin system installed, add to `~/.claude/settings.json`:
 
 ```json
 {
@@ -47,81 +84,68 @@ Edit `~/.claude/settings.json`:
     "ruflo-testgen@ruflo": true,
     "ruflo-docs@ruflo": true,
     "claude-code-settings@feiskyer/claude-code-settings": true
-  },
-  "extraKnownMarketplaces": {
-    "ruflo": {
-      "source": {
-        "source": "directory",
-        "path": "~/.claude/ruflo"
-      },
-      "autoUpdate": false
-    },
-    "neronain/ClaudeSkills-Neronain": {
-      "source": {
-        "source": "directory",
-        "path": "~/.claude/plugins/ClaudeSkills-Neronain"
-      },
-      "autoUpdate": false
-    }
   }
 }
 ```
 
-### Step 4: Restart Claude Code
+### Step 5: Restart Claude Code
 
-Close and reopen Claude Code to load the new skills.
+Close and reopen Claude Code. Skills and agents are now available.
 
-### Step 5: Verify Installation
+### Step 6: Verify Installation
 
-Check that skills are available:
 ```bash
-/claude-flow doctor
+# Check skills are installed
+ls ~/.claude/skills/ | wc -l    # should show 40+
+
+# Check agents are installed
+ls ~/.claude/agents/ | wc -l    # should show 17
+
+# Check commands are installed
+ls ~/.claude/commands/ | wc -l  # should show 12
 ```
 
-Or run any skill:
-```bash
+In Claude Code, try:
+```
+/ruflo-doctor
 /discover-plugins
-```
-
-## Manual Plugin Setup (Alternative)
-
-If you prefer not to use the marketplace configuration:
-
-1. Copy skills to ruflo's skills directory:
-```bash
-cp -r ~/.claude/plugins/ClaudeSkills-Neronain/skills/* ~/.claude/ruflo/plugins/ruflo-core/skills/
-```
-
-2. Restart Claude Code
-
-## Troubleshooting
-
-### "Skill not found" error
-
-- Verify the plugin is enabled in `settings.json`
-- Check the directory structure: `ls -la ~/.claude/plugins/ClaudeSkills-Neronain/skills/`
-- Restart Claude Code
-
-### "MCP server not found" error
-
-Install the ruflo MCP server:
-```bash
-npm install -g @claude-flow/cli
-claude-flow mcp install
-```
-
-### Git clone fails
-
-Check your git configuration:
-```bash
-git config --global user.name
-git config --global user.email
+@fullstack-developer Hello
 ```
 
 ## Updating
 
-To update to the latest version:
 ```bash
-cd ~/.claude/plugins/ClaudeSkills-Neronain
+cd ~/claude/ClaudeSkills-Neronain
 git pull
+./scripts/link-skills.sh --force
+# Restart Claude Code
 ```
+
+## Troubleshooting
+
+### Skills not found after installation
+
+- Verify files exist: `ls ~/.claude/skills/`
+- Restart Claude Code (required after adding new skills)
+- If using plugins, check `enabledPlugins` in `settings.json`
+
+### RTK hook not working
+
+```bash
+which rtk     # verify rtk is in PATH
+which jq      # verify jq is installed
+rtk --version # should be >= 0.23.0
+```
+
+### Git clone fails
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+
+## Full Configuration Reference
+
+See `configs/settings-snippet.json` for a complete `settings.json` example.
+
+See `tools/mcp/` for MCP server configuration files (GitHub, Postgres, Exa, Slack, etc.).

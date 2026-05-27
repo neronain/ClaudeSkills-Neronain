@@ -1,4 +1,5 @@
 {
+  "_comment": "Reference settings.json for ClaudeSkills-Neronain. Replace YOUR_HOME with your home directory path (e.g. /Users/yourname).",
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_FLOW_V3_ENABLED": "true"
@@ -14,14 +15,12 @@
       "Bash(rtk find *)",
       "Bash(rtk gain *)",
       "Bash(rtk ls *)",
-      "Read(//Users/tananan/.claude/plugins/**)",
-      "Read(//Users/tananan/claude/**)",
-      "Read(//Users/tananan/.claude/ruflo/**)",
+      "Read(//YOUR_HOME/.claude/**)",
+      "Read(//YOUR_HOME/claude/**)",
       "WebFetch()",
       "WebSearch()"
     ]
   },
-  "model": "qwen3-coder",
   "hooks": {
     "PreToolUse": [
       {
@@ -29,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/plugins/ClaudeSkills-Neronain/hooks/rtk-rewrite.sh"
+            "command": "YOUR_HOME/.claude/hooks/rtk-rewrite.sh"
           }
         ]
       }
@@ -37,7 +36,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/Users/tananan/.claude/statusline.sh"
+    "command": "YOUR_HOME/.claude/statusline.sh"
   },
   "enabledPlugins": {
     "ruflo-core@ruflo": true,
@@ -53,14 +52,14 @@
     "ruflo": {
       "source": {
         "source": "directory",
-        "path": "~/.claude/ruflo"
+        "path": "YOUR_HOME/.claude/ruflo"
       },
       "autoUpdate": false
     },
     "neronain/ClaudeSkills-Neronain": {
       "source": {
         "source": "directory",
-        "path": "~/.claude/plugins/ClaudeSkills-Neronain"
+        "path": "YOUR_HOME/claude/ClaudeSkills-Neronain"
       },
       "autoUpdate": false
     }
