@@ -13,8 +13,10 @@
       "Bash(rtk gh *)",
       "Bash(rtk find *)",
       "Bash(rtk gain *)",
+      "Bash(rtk ls *)",
       "Read(//Users/tananan/.claude/plugins/**)",
       "Read(//Users/tananan/claude/**)",
+      "Read(//Users/tananan/.claude/ruflo/**)",
       "WebFetch()",
       "WebSearch()"
     ]
@@ -73,7 +75,7 @@
     },
     "postgres": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://localhost:5432/mydb?user=postgres"],
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
       "env": {
         "DATABASE_URL": "postgresql://localhost:5432/mydb?user=postgres"
       }
@@ -83,6 +85,42 @@
       "args": ["-y", "@modelcontextprotocol/server-exa"],
       "env": {
         "EXA_API_KEY": "your-exa-key-here"
+      }
+    },
+    "perplexity": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-perplexity"],
+      "env": {
+        "PERPLEXITY_API_KEY": "your-perplexity-key-here"
+      }
+    },
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-notion"],
+      "env": {
+        "NOTION_API_KEY": "your-notion-api-key-here"
+      }
+    },
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "your-slack-bot-token-here"
+      }
+    },
+    "google-maps": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-google-maps"],
+      "env": {
+        "GOOGLE_API_KEY": "your-google-maps-api-key-here"
+      }
+    },
+    "google-search": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-google-search"],
+      "env": {
+        "GOOGLE_API_KEY": "your-google-api-key-here",
+        "GOOGLE_CSE_ID": "your-google-cse-id-here"
       }
     }
   },

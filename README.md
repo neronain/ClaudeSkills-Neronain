@@ -40,14 +40,19 @@ ClaudeSkills-Neronain/
 │   ├── misc/         # Rarely used skills
 │   └── ...
 ├── tools/            # CLI tools
-│   └── rtk/          # Token optimizer
-│       ├── hooks/    # Pre-tool hooks
-│       └── docs/     # Tool documentation
+│   ├── rtk/          # Token optimizer
+│   └── mcp/          # MCP server configurations (GitHub, Postgres, Search, etc.)
 ├── hooks/            # Global hooks
 │   └── rtk-rewrite.sh
-└── scripts/          # Utility scripts
-    ├── link-skills.sh
-    └── list-skills.sh
+├── configs/          # Configuration examples
+│   ├── settings-snippet.json   # Complete settings.json reference
+│   ├── hooks-reference.md      # Hook documentation
+│   └── rtk-hook-guide.md       # RTK hook setup guide
+├── scripts/          # Utility scripts
+│   ├── link-skills.sh
+│   └── update-from-github.sh
+├── agents/           # 17 specialized AI agents
+└── skills/           # Agent skills
 ```
 
 ## Installation (New Machine)
@@ -201,6 +206,29 @@ cd ~/.claude/plugins/ClaudeSkills-Neronain
 |-------|-------------|
 | `/claude-automation-recommender` | Recommend automations (hooks, subagents, skills) |
 
+## MCP Tools
+
+| Tool | Description | Setup |
+|------|-------------|-------|
+| **github** | GitHub issues, PRs, repos, code search | Add GitHub token |
+| **postgres** | PostgreSQL queries, schema info | Add DATABASE_URL |
+| **exa** | Web search with Exa AI | Add EXA_API_KEY |
+| **perplexity** | AI-powered search | Add PERPLEXITY_API_KEY |
+| **notion** | Read/write Notion pages, databases | Add NOTION_API_KEY |
+| **slack** | Send messages, read channels | Add SLACK_BOT_TOKEN |
+| **google-maps** | Location search, directions | Add GOOGLE_API_KEY |
+| **google-search** | Web search with Google | Add API keys |
+
+See `tools/mcp/` for configurations.
+
+## Hooks
+
+| Hook | Description | Location |
+|------|-------------|----------|
+| **RTK Rewrite** | Auto-wraps bash with RTK for 80% token savings | `hooks/rtk-rewrite.sh` |
+
+See `configs/` for hook documentation.
+
 ## Available Tools
 
 ### RTK - Rust Token Killer
@@ -267,7 +295,25 @@ cd ~/.claude/plugins/ClaudeSkills-Neronain
 /security-auditor deps package.json
 /security-auditor secrets ./
 /security-auditor compliance gdpr
-```
+
+# 17 Specialized Agents (New!)
+@fullstack-developer Create a REST API for user management
+@typescript-pro Implement a generic repository pattern
+@python-pro Build async HTTP client
+@rust-engineer Create ownership patterns
+@nextjs-developer Set up App Router with Server Components
+@frontend-developer Build accessible React component
+@backend-developer Design database schema
+@api-designer Create OpenAPI specification
+@devops-engineer Set up CI/CD pipeline
+@kubernetes-specialist Create deployment manifest
+@database-administrator Optimize PostgreSQL queries
+@llm-architect Build RAG pipeline
+@security-auditor Perform code security audit
+@penetration-tester Test web application security
+@architect-reviewer Review system design
+@project-manager Plan sprint backlog
+@productivity-specialist Design workflow automation
 
 ## Requirements
 

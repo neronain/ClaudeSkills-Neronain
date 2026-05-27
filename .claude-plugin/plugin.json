@@ -1,5 +1,6 @@
 {
   "name": "ClaudeSkills-Neronain",
+  "description": "All-in-one Claude Code setup with Skills, Tools, Agents, and Configurations",
   "skills": [
     "./skills/engineering/debug-mantra",
     "./skills/engineering/post-mortem",
@@ -7,6 +8,22 @@
     "./skills/productivity/management-talk",
     "./skills/connect",
     "./skills/playwright",
-    "./agents/security-auditor"
+    "./agents/security-auditor",
+    "./agents/typescript-pro",
+    "./agents/python-pro",
+    "./agents/rust-engineer",
+    "./agents/nextjs-developer",
+    "./agents/fullstack-developer",
+    "./agents/frontend-developer",
+    "./agents/backend-developer",
+    "./agents/api-designer",
+    "./agents/devops-engineer",
+    "./agents/kubernetes-specialist",
+    "./agents/database-administrator",
+    "./agents/llm-architect",
+    "./agents/penetration-tester",
+    "./agents/architect-reviewer",
+    "./agents/project-manager",
+    "./agents/productivity-specialist"
   ]
 }
