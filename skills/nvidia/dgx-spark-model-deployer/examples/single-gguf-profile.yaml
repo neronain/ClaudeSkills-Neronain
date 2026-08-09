@@ -1,0 +1,17 @@
+model:
+  id: publisher/model-GGUF
+  revision: PINNED_COMMIT
+  served_name: model-gguf
+  artifact_type: gguf
+  files:
+    - model-Q6_K.gguf
+deployment:
+  runtime: llama.cpp
+  topology: single
+  runtime_commit: PINNED_LLAMA_CPP_COMMIT
+  context: 65536
+  max_sequences: 1
+features:
+  modalities: [text]
+integrity:
+  full_sha256: true

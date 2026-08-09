@@ -1,0 +1,45 @@
+schema_version: 1
+model:
+  id: __REQUIRED_MODEL_ID__
+  revision: __REQUIRED_REVISION__
+  served_name: __REQUIRED_SERVED_NAME__
+  artifact_type: transformers   # transformers | gguf
+  architecture: __REQUIRED__
+  total_parameters: null
+  active_parameters: null
+  native_context: null
+  indexed_size_bytes: null
+  files: []
+
+deployment:
+  runtime: vllm              # vllm | llama.cpp | sglang
+  topology: single           # single | stacked
+  runtime_image: null
+  runtime_commit: null
+  distributed_backend: null
+  context: null
+  max_sequences: 1
+  gpu_memory_utilization: null
+  kv_cache_dtype: auto
+
+features:
+  tools:
+    enabled: false
+    parser: null
+    template: null
+  reasoning:
+    enabled: false
+    parser: null
+  modalities: [text]
+  trust_remote_code: false
+
+integrity:
+  verify_revision: true
+  verify_indexed_shards: true
+  full_sha256: false
+  sync_all_nodes: false
+
+validation:
+  static_only: true
+  hardware_tested: false
+  notes: []

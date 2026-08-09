@@ -1,0 +1,16 @@
+model:
+  id: vendor/large-moe
+  revision: PINNED_COMMIT
+  served_name: large-moe
+deployment:
+  runtime: vllm
+  topology: stacked
+  distributed_backend: VERIFIED_MP_OR_RAY
+  context: 65536
+  max_sequences: 1
+integrity:
+  full_sha256: true
+  sync_all_nodes: true
+validation:
+  static_only: true
+  hardware_tested: false

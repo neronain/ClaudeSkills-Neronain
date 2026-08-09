@@ -1,63 +1,82 @@
-#!/bin/bash
-# Script to update skills from GitHub repositories
-# Usage: ./update-from-github.sh
+#!/usr/bin/env bash
+# Pull vendored skills back in from their upstream repos, then refresh the docs.
+#
+# Usage: ./scripts/update-from-github.sh [--refs]
+#   (no flag)  sync the skills this repo actually vendors  (9arm-skills)
+#   --refs     additionally clone the read-only reference repos into a cache dir
+#              for browsing; nothing is copied from them automatically
+#
+# After this runs, review `git diff` before committing — upstream owns those files
+# and a blind copy can revert a local fix you meant to send upstream instead.
 
-set -e
+set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CACHE_DIR="/tmp/claude-skills-update"
+CACHE_DIR="${CACHE_DIR:-${TMPDIR:-/tmp}/claude-skills-refs}"
 
-echo "=== ClaudeSkills-Neronain: Update from GitHub ==="
-echo ""
+# upstream repo -> local checkout -> which bucket its subfolders map to
+NINEARM_REMOTE="https://github.com/thananon/9arm-skills.git"
+NINEARM_LOCAL="${NINEARM_LOCAL:-$HOME/9arm-skills}"
 
-# Create cache directory
-mkdir -p "$CACHE_DIR"
+echo "=== sync vendored skills ==="
 
-# Function to clone/update a repo
-clone_or_update() {
-    local repo_url="$1"
-    local repo_name="$2"
-    local branch="${3:-main}"
-    
-    echo "Fetching $repo_name..."
-    
-    if [ -d "$CACHE_DIR/$repo_name" ]; then
-        cd "$CACHE_DIR/$repo_name"
-        git fetch origin
-        git checkout "$branch"
-        git pull origin "$branch"
+if [ -d "$NINEARM_LOCAL/.git" ]; then
+  echo "9arm-skills: $NINEARM_LOCAL"
+  git -C "$NINEARM_LOCAL" pull --ff-only
+else
+  echo "9arm-skills: cloning into $NINEARM_LOCAL"
+  git clone "$NINEARM_REMOTE" "$NINEARM_LOCAL"
+fi
+
+copied=0
+for bucket in engineering productivity; do
+  src="$NINEARM_LOCAL/skills/$bucket"
+  [ -d "$src" ] || continue
+  mkdir -p "$REPO_DIR/skills/$bucket"
+  for skill in "$src"/*/; do
+    [ -d "$skill" ] || continue
+    name="$(basename "$skill")"
+    rm -rf "${REPO_DIR:?}/skills/$bucket/$name"
+    cp -R "$skill" "$REPO_DIR/skills/$bucket/$name"
+    echo "  $bucket/$name"
+    copied=$((copied + 1))
+  done
+done
+echo "$copied vendored skills refreshed"
+
+echo
+echo "=== regenerate docs ==="
+"$REPO_DIR/scripts/gen-docs.py"
+
+echo
+echo "Review before committing:"
+echo "  git -C $REPO_DIR diff --stat"
+
+# ---------------------------------------------------------------------------
+if [[ " $* " == *" --refs "* ]]; then
+  echo
+  echo "=== reference repos (browse only, nothing is copied) ==="
+  mkdir -p "$CACHE_DIR"
+  refs=(
+    "https://github.com/anthropics/claude-code.git"
+    "https://github.com/ComposioHQ/awesome-claude-skills.git"
+    "https://github.com/VoltAgent/awesome-claude-code-subagents.git"
+    "https://github.com/rohitg00/awesome-claude-code-toolkit.git"
+    "https://github.com/davila7/claude-code-templates.git"
+    "https://github.com/FlorianBruniaux/claude-code-ultimate-guide.git"
+    "https://github.com/shareAI-lab/learn-claude-code.git"
+    "https://github.com/gsd-build/get-shit-done.git"
+  )
+  for url in "${refs[@]}"; do
+    name="$(basename "$url" .git)"
+    if [ -d "$CACHE_DIR/$name/.git" ]; then
+      echo "  update $name"
+      git -C "$CACHE_DIR/$name" pull --ff-only --quiet || echo "    (skipped: local changes)"
     else
-        git clone "$repo_url" "$CACHE_DIR/$repo_name" --branch "$branch" --depth 1
+      echo "  clone  $name"
+      git clone --depth 1 --quiet "$url" "$CACHE_DIR/$name"
     fi
-}
-
-# Function to copy skills from cloned repo
-copy_skills() {
-    local src_dir="$1"
-    local dest_dir="$2"
-    local skills_pattern="${3:-SKILL.md}"
-    
-    if [ -d "$src_dir" ]; then
-        echo "  Copying skills from $src_dir..."
-        cp -r "$src_dir"/* "$dest_dir/" 2>/dev/null || true
-    fi
-}
-
-# Clone repositories
-echo "Cloning repositories..."
-clone_or_update "https://github.com/ComposioHQ/awesome-claude-skills.git" "awesome-claude-skills"
-clone_or_update "https://github.com/davila7/claude-code-templates.git" "claude-code-templates"
-clone_or_update "https://github.com/VoltAgent/awesome-claude-code-subagents.git" "awesome-claude-code-subagents"
-clone_or_update "https://github.com/rohitg00/awesome-claude-code-toolkit.git" "awesome-claude-code-toolkit"
-clone_or_update "https://github.com/anthropics/claude-code.git" "claude-code"
-clone_or_update "https://github.com/gsd-build/get-shit-done.git" "get-shit-done"
-clone_or_update "https://github.com/FlorianBruniaux/claude-code-ultimate-guide.git" "claude-code-ultimate-guide"
-clone_or_update "https://github.com/affaan-m/ECC.git" "ECC"
-clone_or_update "https://github.com/shareAI-lab/learn-claude-code.git" "learn-claude-code"
-
-echo ""
-echo "Update complete!"
-echo ""
-echo "You can now manually review and copy skills from:"
-echo "  $CACHE_DIR/"
-echo ""
+  done
+  echo
+  echo "Browse: $CACHE_DIR"
+fi

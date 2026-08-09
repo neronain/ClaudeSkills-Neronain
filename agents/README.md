@@ -1,83 +1,69 @@
-# Agents
+# Subagents
 
-Specialized AI agents for specific tasks.
+17 specialist subagents, installed to `~/.claude/agents/`. Invoke with `@name`, or
+let Claude pick one via the Agent tool.
 
-## Core Development
+A subagent runs in its own context window. That is the point: hand it a bounded job
+("audit this module for injection risks", "design the Postgres schema for X") and
+you get the conclusion back without the exploration filling your main conversation.
 
-| Agent | Description |
-|-------|-------------|
-| [fullstack-developer](./fullstack-developer.md) | End-to-end web development (React, Node, Python, databases) |
-| [frontend-developer](./frontend-developer.md) | Frontend (React/Vue/Angular) with UI/UX and performance |
-| [backend-developer](./backend-developer.md) | Backend (Node/Python/Go) with APIs and databases |
-| [api-designer](./api-designer.md) | REST/GraphQL/WebSocket API design and documentation |
+## Build
 
-## Language Specialists
+| Agent | Focus |
+|---|---|
+| [`@fullstack-developer`](fullstack-developer.md) | End-to-end application development with modern web technologies |
+| [`@frontend-developer`](frontend-developer.md) | React/Vue/Angular, UI/UX, performance, accessibility |
+| [`@backend-developer`](backend-developer.md) | Node.js/Python/Go, APIs, databases, microservices |
+| [`@nextjs-developer`](nextjs-developer.md) | App Router, Server Components, API routes, optimization |
 
-| Agent | Description |
-|-------|-------------|
-| [typescript-pro](./typescript-pro.md) | TypeScript advanced types, generics, and enterprise patterns |
-| [python-pro](./python-pro.md) | Python asyncio, decorators, generators, FastAPI |
-| [rust-engineer](./rust-engineer.md) | Rust ownership, borrowing, async, systems programming |
-| [nextjs-developer](./nextjs-developer.md) | Next.js App Router, Server Components, API routes |
+## Languages
 
-## Infrastructure & DevOps
+| Agent | Focus |
+|---|---|
+| [`@typescript-pro`](typescript-pro.md) | Advanced type system, generics, utilities, enterprise patterns |
+| [`@python-pro`](python-pro.md) | asyncio, decorators, generators, Pythonic patterns |
+| [`@rust-engineer`](rust-engineer.md) | Ownership, borrowing, async, systems programming |
 
-| Agent | Description |
-|-------|-------------|
-| [devops-engineer](./devops-engineer.md) | CI/CD, infrastructure as code, monitoring, cloud operations |
-| [kubernetes-specialist](./kubernetes-specialist.md) | Kubernetes clusters, deployments, networking, storage |
-| [database-administrator](./database-administrator.md) | PostgreSQL, MySQL, MongoDB, and optimization |
+## Architecture & data
 
-## AI & LLM
+| Agent | Focus |
+|---|---|
+| [`@api-designer`](api-designer.md) | REST/GraphQL/WS design, OpenAPI, backend architecture |
+| [`@architect-reviewer`](architect-reviewer.md) | System design review, architecture patterns, technical debt |
+| [`@database-administrator`](database-administrator.md) | PostgreSQL, MySQL, MongoDB, query and index optimization |
+| [`@llm-architect`](llm-architect.md) | Prompt engineering, RAG, agents, LLM application design |
 
-| Agent | Description |
-|-------|-------------|
-| [llm-architect](./llm-architect.md) | Prompt engineering, RAG, agents, LLM application design |
+## Operations
 
-## Security & Quality
+| Agent | Focus |
+|---|---|
+| [`@devops-engineer`](devops-engineer.md) | CI/CD, infrastructure as code, monitoring, cloud operations |
+| [`@kubernetes-specialist`](kubernetes-specialist.md) | Clusters, deployments, services, K8s-native development |
 
-| Agent | Description |
-|-------|-------------|
-| [security-auditor](./security-auditor.md) | Security audit - OWASP, compliance, SAST/SCA/DAST |
-| [penetration-tester](./penetration-tester.md) | Ethical hacking, vulnerability assessment, security testing |
-| [architect-reviewer](./architect-reviewer.md) | System design review, architecture patterns, technical debt |
+## Security
 
-## Project & Team Management
+| Agent | Focus |
+|---|---|
+| [`@security-auditor`](security-auditor.md) | Vulnerability scanning, compliance, security best practices |
+| [`@penetration-tester`](penetration-tester.md) | Ethical hacking, vulnerability assessment, security testing |
 
-| Agent | Description |
-|-------|-------------|
-| [project-manager](./project-manager.md) | Agile/Scrum, planning, tracking, team coordination |
-| [productivity-specialist](./productivity-specialist.md) | Workflow automation, time management, knowledge organization |
+> Both security agents assume an authorized context — your own systems, a scoped
+> engagement, or a CTF. State the authorization when you invoke them.
 
-## Usage
+## Process
 
-Invoke an agent in your conversation:
+| Agent | Focus |
+|---|---|
+| [`@project-manager`](project-manager.md) | Agile/Scrum, planning, tracking, team coordination |
+| [`@productivity-specialist`](productivity-specialist.md) | Workflow optimization, automation, time management |
 
-```
-@fullstack-developer Create a REST API for user management
-@typescript-pro Implement a generic repository pattern
-@devops-engineer Set up CI/CD pipeline for Node.js app
-@security-auditor code ./src/api
-```
+---
 
-## Available Task Types by Agent
+## Adding one
 
-| Agent | Task Types |
-|-------|------------|
-| fullstack-developer | react, api, database, devops, fullstack |
-| frontend-developer | react, ui-ux, performance, testing, styling |
-| backend-developer | node, python, database, api, microservice |
-| api-designer | rest, graphql, websocket, openapi, architecture |
-| typescript-pro | types, generics, refactor, patterns, testing |
-| python-pro | asyncio, decorators, generators, fastapi, pandas |
-| rust-engineer | ownership, async, web, database, testing, unsafe |
-| nextjs-developer | app-router, api-routes, performance, middleware, metadata |
-| devops-engineer | github-actions, terraform, monitoring, docker, cloud |
-| kubernetes-specialist | deployments, networking, storage, security, helm |
-| database-administrator | postgresql, mysql, mongodb, optimization, backup |
-| llm-architect | prompt, rag, agents, evaluation, optimization |
-| security-auditor | code, deps, secrets, compliance, pentest |
-| penetration-tester | web, network, mobile, reporting |
-| architect-reviewer | system, code, debt, migration |
-| project-manager | agile, planning, tracking, team |
-| productivity-specialist | automation, time, notes, tools |
+Drop `agents/<name>.md` with `name:` and `description:` frontmatter, add a row to the
+table above, then run `./scripts/gen-docs.py` (picks it up into `plugin.json`) and
+`./scripts/link-skills.sh --force`. Restart Claude Code.
+
+The `description:` is what Claude matches against when choosing an agent — write it
+as *when to use this*, not as a job title.

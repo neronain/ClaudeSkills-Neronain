@@ -1,0 +1,36 @@
+profile_version: 1
+team_name: neronain-dgx-spark
+language: th
+
+master:
+  host: 10.100.152.1
+  ssh_user: neronain
+  hostname: gigabyte01
+
+workers:
+  - host: 10.100.152.2
+    ssh_user: neronain
+
+paths:
+  home: /home/neronain
+  huggingface_cache: /home/neronain/.cache/huggingface
+  model_root: /home/neronain/models
+  source_root: /home/neronain/src
+
+api:
+  host: 0.0.0.0
+  port: 8000
+  require_key_on_shared_network: true
+
+docker:
+  gpu_arguments: ["--gpus", "all"]
+  network_mode: host
+  ipc_mode: host
+  use_runtime_nvidia: false
+
+defaults:
+  no_autostart: true
+  persistent_cache: true
+  full_hash_for_stacked: true
+  static_validation_required: true
+  package_zip_required: true

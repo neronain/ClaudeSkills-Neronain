@@ -1,56 +1,87 @@
-# Installation Guide
+# Installation
 
-## Quick Start (Recommended)
-
-```bash
-# Clone the repo
-git clone https://github.com/neronain/ClaudeSkills-Neronain.git ~/claude/ClaudeSkills-Neronain
-
-# Install skills, agents, and commands
-cd ~/claude/ClaudeSkills-Neronain
-./scripts/link-skills.sh
-
-# Restart Claude Code to load everything
-```
-
-## Detailed Installation Steps
-
-### Step 1: Clone Repository
+## TL;DR
 
 ```bash
 git clone https://github.com/neronain/ClaudeSkills-Neronain.git ~/claude/ClaudeSkills-Neronain
-```
-
-### Step 2: Install Skills, Agents, and Commands
-
-```bash
 cd ~/claude/ClaudeSkills-Neronain
 ./scripts/link-skills.sh
 ```
 
-This installs to:
-- `~/.claude/skills/` — 40+ skills
-- `~/.claude/agents/` — 17 specialized agents
-- `~/.claude/commands/` — 12 slash commands
+Restart Claude Code. That installs 56 skills, 17 subagents, and 12 slash commands.
+The RTK hook and Ruflo plugins are separate opt-in steps below.
 
-To force-overwrite existing files (after a `git pull`):
+Requirements: `bash`, `git`, `python3` (only for `gen-docs.py`). Works on macOS and
+Linux. Nothing is compiled and nothing runs as root.
+
+---
+
+## Step 1 — Clone
+
 ```bash
-./scripts/link-skills.sh --force
+git clone https://github.com/neronain/ClaudeSkills-Neronain.git ~/claude/ClaudeSkills-Neronain
 ```
 
-### Step 3: Install RTK Hook (Token Savings)
+Any path works; `~/claude/ClaudeSkills-Neronain` is what the other docs assume.
+
+## Step 2 — Install skills, agents, commands
 
 ```bash
-# Install rtk and jq (macOS)
+cd ~/claude/ClaudeSkills-Neronain
+./scripts/link-skills.sh --dry-run   # see exactly what it would touch
+./scripts/link-skills.sh
+```
+
+| Source | Destination |
+|---|---|
+| `skills/<name>/SKILL.md` | `~/.claude/skills/<name>/` |
+| `skills/<bucket>/<name>/SKILL.md` | `~/.claude/skills/<name>/` |
+| `agents/*.md` | `~/.claude/agents/` |
+| `commands/*.md` | `~/.claude/commands/` |
+
+Behaviour worth knowing:
+
+- **Whole directories are copied**, so a skill's `references/` and `scripts/`
+  subfolders survive. (The old version copied only top-level `*.md` and quietly
+  dropped everything else.)
+- **Existing files are skipped** unless you pass `--force`.
+- **Symlinks are never overwritten.** If `~/.claude/skills/debug-mantra` points at
+  `~/9arm-skills/...`, the installer leaves it alone and prints why. Update those
+  through their own repo.
+- Buckets are detected structurally — a directory with no `SKILL.md` but children
+  that have one is a bucket. Add `skills/whatever/` and it just works.
+- Override the target with `CLAUDE_HOME=/some/path ./scripts/link-skills.sh`.
+
+## Step 3 — RTK hook (optional, big token saver)
+
+The installer does **not** touch `~/.claude/hooks/`. Copy it deliberately:
+
+```bash
+# macOS
 brew install rtk jq
+# or: cargo install rtk
 
-# Copy RTK hook to Claude hooks directory
+rtk --version   # must be >= 0.23.0
+```
+
+Before overwriting an existing hook, compare versions — line 2 of the script carries
+`# rtk-hook-version: N`. A working machine is often ahead of this repo.
+
+```bash
+head -2 ~/.claude/hooks/rtk-rewrite.sh    # what you have now
+head -2 hooks/rtk-rewrite.sh              # what the repo ships
+```
+
+If the repo is newer or you have nothing:
+
+```bash
 mkdir -p ~/.claude/hooks
-cp ~/claude/ClaudeSkills-Neronain/hooks/rtk-rewrite.sh ~/.claude/hooks/
+cp hooks/rtk-rewrite.sh ~/.claude/hooks/
 chmod +x ~/.claude/hooks/rtk-rewrite.sh
 ```
 
-Then add to `~/.claude/settings.json`:
+Then register it in `~/.claude/settings.json`:
+
 ```json
 {
   "hooks": {
@@ -58,10 +89,7 @@ Then add to `~/.claude/settings.json`:
       {
         "matcher": "Bash",
         "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/rtk-rewrite.sh"
-          }
+          { "type": "command", "command": "~/.claude/hooks/rtk-rewrite.sh" }
         ]
       }
     ]
@@ -69,9 +97,20 @@ Then add to `~/.claude/settings.json`:
 }
 ```
 
-### Step 4: Enable Ruflo Plugins (Optional)
+Verify it is live:
 
-If you have the Ruflo plugin system installed, add to `~/.claude/settings.json`:
+```bash
+rtk gain          # token savings analytics
+rtk gain --history
+```
+
+If `rtk gain` reports an unknown subcommand you have the wrong `rtk` — the name
+collides with *Rust Type Kit*. Check `which rtk`.
+
+## Step 4 — Ruflo plugins (optional)
+
+The 9 skills in [`skills/ruflo/`](skills/ruflo/) drive the Ruflo plugin suite and
+need the plugins themselves installed. Add to `~/.claude/settings.json`:
 
 ```json
 {
@@ -82,35 +121,32 @@ If you have the Ruflo plugin system installed, add to `~/.claude/settings.json`:
     "ruflo-intelligence@ruflo": true,
     "ruflo-security-audit@ruflo": true,
     "ruflo-testgen@ruflo": true,
-    "ruflo-docs@ruflo": true,
-    "claude-code-settings@feiskyer/claude-code-settings": true
+    "ruflo-docs@ruflo": true
   }
 }
 ```
 
-### Step 5: Restart Claude Code
+A complete reference file is in [`configs/settings-snippet.json`](configs/settings-snippet.json).
 
-Close and reopen Claude Code. Skills and agents are now available.
+## Step 5 — MCP servers (optional)
 
-### Step 6: Verify Installation
+[`tools/mcp/`](tools/mcp/) holds ready-made configs for GitHub, Postgres, Slack,
+Notion, Exa, Perplexity, Google Search, and Google Maps.
+
+**Every one of them expects a token you supply yourself.** Never commit a filled-in
+copy — put real values in `~/.claude/settings.local.json` or an env var, not here.
+
+## Step 6 — Verify
 
 ```bash
-# Check skills are installed
-ls ~/.claude/skills/ | wc -l    # should show 40+
-
-# Check agents are installed
-ls ~/.claude/agents/ | wc -l    # should show 17
-
-# Check commands are installed
-ls ~/.claude/commands/ | wc -l  # should show 12
+ls ~/.claude/skills   | wc -l    # 56
+ls ~/.claude/agents   | wc -l    # 17
+ls ~/.claude/commands | wc -l    # 12
 ```
 
-In Claude Code, try:
-```
-/ruflo-doctor
-/discover-plugins
-@fullstack-developer Hello
-```
+In Claude Code, restart, then try `/debug-mantra`, `/scrutinize`, or `@backend-developer`.
+
+---
 
 ## Updating
 
@@ -118,34 +154,45 @@ In Claude Code, try:
 cd ~/claude/ClaudeSkills-Neronain
 git pull
 ./scripts/link-skills.sh --force
-# Restart Claude Code
 ```
+
+Upstream-vendored skills (`debug-mantra`, `post-mortem`, `scrutinize`,
+`management-talk`, `qwen-agent`, `qwenchance`) come from
+[thananon/9arm-skills](https://github.com/thananon/9arm-skills). To refresh those:
+
+```bash
+cd ~/9arm-skills && git pull
+cd ~/claude/ClaudeSkills-Neronain
+cp -R ~/9arm-skills/skills/engineering/*   skills/engineering/
+cp -R ~/9arm-skills/skills/productivity/*  skills/productivity/
+./scripts/gen-docs.py
+```
+
+## Contributing a skill to this repo
+
+1. Create `skills/<bucket>/<name>/SKILL.md` with `name:` and `description:` frontmatter.
+2. Run `./scripts/gen-docs.py` — it rewrites `plugin.json` and the bucket README.
+3. Add a line to the top-level `README.md` only if it belongs in "ones I reach for most".
+4. `./scripts/link-skills.sh --force` and restart Claude Code to try it.
+
+Drafts go in `skills/in-progress/`, machine-specific things in `skills/personal/`.
+Those buckets are excluded from the manifest and the docs on purpose.
+
+---
 
 ## Troubleshooting
 
-### Skills not found after installation
+**Skill doesn't show up.** Restart Claude Code — new skills are read at startup.
+Then check `ls ~/.claude/skills/<name>/SKILL.md` actually exists.
 
-- Verify files exist: `ls ~/.claude/skills/`
-- Restart Claude Code (required after adding new skills)
-- If using plugins, check `enabledPlugins` in `settings.json`
+**`link-skills.sh: unknown flag`.** Only `--force`, `--dry-run`, and `--help` are
+accepted; the script fails loudly rather than ignoring a typo.
 
-### RTK hook not working
+**Installer skipped a skill.** Either it already exists (use `--force`) or it is a
+symlink (intentional — see step 2).
 
-```bash
-which rtk     # verify rtk is in PATH
-which jq      # verify jq is installed
-rtk --version # should be >= 0.23.0
-```
+**RTK hook does nothing.** `which rtk`, `which jq`, `rtk --version` (need ≥ 0.23.0).
+The hook warns on stderr and exits 0 when any of those fail, so commands still run.
 
-### Git clone fails
-
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
-```
-
-## Full Configuration Reference
-
-See `configs/settings-snippet.json` for a complete `settings.json` example.
-
-See `tools/mcp/` for MCP server configuration files (GitHub, Postgres, Exa, Slack, etc.).
+**`gen-docs.py --check` fails in CI.** Docs are stale — run `./scripts/gen-docs.py`
+and commit the result.

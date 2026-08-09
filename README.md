@@ -1,425 +1,176 @@
 # ClaudeSkills-Neronain
 
-All-in-one Claude Code setup with **Skills** and **Tools** .
+My Claude Code setup, kept in one repo so a fresh machine is one `git clone` and one script away from the environment I actually work in.
 
-## What's Included
-
-This repository contains everything you need to set up Claude Code:
-
-| Type | Count | Description |
-|------|-------|-------------|
-| **Skills** | 40+ | Engineering, productivity, web quality, automation, AI workflows |
-| **Agents** | 17 | Specialized AI agents (fullstack, security, devops, LLM, etc.) |
-| **Commands** | 12 | Slash commands for code, UI, DB, deploy, a11y, testing |
-| **Hooks** | 1 | RTK hook for 60-90% token savings |
-| **Tools** | RTK | Token-optimized CLI proxy |
-
-## All 17 Agents
-
-| Agent | Description |
-|-------|-------------|
-| `@fullstack-developer` | Full-stack app development, REST APIs, architecture |
-| `@frontend-developer` | React, CSS, accessible UI components |
-| `@backend-developer` | Server-side logic, databases, APIs |
-| `@typescript-pro` | TypeScript patterns, generics, type safety |
-| `@python-pro` | Python async, data processing, scripting |
-| `@rust-engineer` | Rust ownership, performance, systems programming |
-| `@nextjs-developer` | Next.js App Router, Server Components, SSR |
-| `@api-designer` | OpenAPI specs, REST design, GraphQL |
-| `@devops-engineer` | CI/CD pipelines, Docker, infrastructure |
-| `@kubernetes-specialist` | K8s manifests, Helm charts, cluster management |
-| `@database-administrator` | SQL optimization, schema design, migrations |
-| `@llm-architect` | RAG pipelines, prompt engineering, AI apps |
-| `@security-auditor` | OWASP Top 10, dependency audit, secret detection |
-| `@penetration-tester` | Web app security testing (authorized only) |
-| `@architect-reviewer` | System design review, architecture decisions |
-| `@project-manager` | Sprint planning, backlog management |
-| `@productivity-specialist` | Workflow automation, efficiency optimization |
-
-## Key Skills
-
-| Skill | Description | Use Case |
-|-------|-------------|----------|
-| `/connect` | 500+ SaaS integrations | Gmail, Slack, GitHub, Notion, Jira, and more |
-| `/playwright` | Browser automation | Web testing, scraping, form automation |
-| `/debug-mantra` | 4-step debugging discipline | Any debugging session |
-| `/scrutinize` | Code review & audit | PR review, second opinion |
-| `/post-mortem` | Bug fix documentation | After fixing a bug |
-| `/management-talk` | Convert tech content for leadership | Status updates, reports |
-| `/feature-dev` | 7-phase feature development | Building new features |
-| `/code-review` | Automated PR review | Pull request review |
-| `/hookify` | Create automation hooks | Prevent unwanted behaviors |
-| `/tdd-workflow` | TDD London School | Test-driven development |
-| `/doc-gen` | Documentation generation | Auto-generate docs |
-
-## Commands (Slash)
-
-| Command | Description |
-|---------|-------------|
-| `/a11y` | Accessibility audit (WCAG 2.1 AA) |
-| `/api` | API route generator (Next.js) |
-| `/db` | Database & Prisma helper |
-| `/debug` | Debug assistant |
-| `/deploy` | Deploy checklist |
-| `/design` | Full page design review |
-| `/perf` | Performance audit |
-| `/refactor` | Code refactor |
-| `/responsive` | Responsive design fixer |
-| `/test` | Test generator |
-| `/ui` | UI component generator |
-| `/ux` | UX/UI review |
-
-## Repository Structure
-
-```
-ClaudeSkills-Neronain/
-├── skills/           # 40+ skills
-│   ├── engineering/  # debug-mantra, post-mortem, scrutinize
-│   ├── productivity/ # management-talk
-│   ├── misc/         # Rarely used
-│   ├── connect/      # Composio SaaS integrations
-│   ├── playwright/   # Browser automation
-│   └── ...           # Web quality, AI, hookify, code review
-├── agents/           # 17 specialized AI agents
-├── commands/         # 12 slash commands (a11y, api, db, deploy, etc.)
-├── tools/            # CLI tools
-│   ├── rtk/          # Token optimizer
-│   └── mcp/          # MCP server configs
-├── hooks/            # Global hooks
-│   └── rtk-rewrite.sh
-├── configs/          # Configuration examples
-├── scripts/          # Utility scripts
-└── .claude-plugin/   # Plugin manifest
-    └── plugin.json
-```
-
-## Installation (New Machine)
-
-### Step 1: Install Dependencies
+| | Count | Where |
+|---|---|---|
+| **Skills** | 56 | [`skills/`](skills/) → `~/.claude/skills/` |
+| **Subagents** | 17 | [`agents/`](agents/) → `~/.claude/agents/` |
+| **Slash commands** | 12 | [`commands/`](commands/) → `~/.claude/commands/` |
+| **Hooks** | 1 | [`hooks/`](hooks/) → `~/.claude/hooks/` (manual, see [INSTALL.md](INSTALL.md)) |
+| **MCP configs** | 8 | [`tools/mcp/`](tools/mcp/) (reference only) |
 
 ```bash
-brew install rtk jq
+git clone https://github.com/neronain/ClaudeSkills-Neronain.git ~/claude/ClaudeSkills-Neronain
+cd ~/claude/ClaudeSkills-Neronain && ./scripts/link-skills.sh
 ```
 
-### Step 2: Clone This Repository
+Full steps, including the RTK hook and Ruflo plugins, are in **[INSTALL.md](INSTALL.md)**.
 
-```bash
-cd ~/.claude/plugins
-git clone https://github.com/neronain/ClaudeSkills-Neronain.git
+---
+
+## Skills
+
+Skills live in buckets. Each bucket has its own README listing every skill with a
+one-line description — those are generated from the `description:` frontmatter, so
+they never drift from what Claude actually reads.
+
+| Bucket | Skills | Covers |
+|---|---|---|
+| [engineering](skills/engineering/) | 19 | Code review, debugging discipline, testing, docs, dependency and security scans |
+| [nvidia](skills/nvidia/) | 12 | RAG Blueprint, NeMo, AI-Q, Nemotron retrieval, DGX Spark deployment |
+| [ruflo](skills/ruflo/) | 9 | Swarm init, autopilot loop, neural training, intelligence routing |
+| [web](skills/web/) | 6 | Performance, accessibility, SEO, Core Web Vitals, full quality audit |
+| [hookify](skills/hookify/) | 5 | Turn "stop doing that" into an enforced hook |
+| [productivity](skills/productivity/) | 3 | Management-facing writing, context hygiene, SaaS connections |
+| [misc](skills/misc/) | 2 | Cybersecurity AI (CAI), skill card generator |
+
+### Ones I reach for most
+
+| Skill | Why |
+|---|---|
+| [`debug-mantra`](skills/engineering/debug-mantra/SKILL.md) | Reproduce → trace the fail path → falsify the hypothesis → cross-reference. Stops guess-and-check debugging. |
+| [`scrutinize`](skills/engineering/scrutinize/SKILL.md) | Outsider review of a plan or diff — questions the intent first, then traces the real code path. |
+| [`post-mortem`](skills/engineering/post-mortem/SKILL.md) | Writes the canonical record of a fixed bug once it is actually fixed and validated. |
+| [`qwen-agent`](skills/engineering/qwen-agent/SKILL.md) | Hands mechanical work (renames, boilerplate, log reading) to a cheap Qwen subagent instead of burning Claude quota. |
+| [`qwenchance`](skills/productivity/qwenchance/SKILL.md) | Breaks a long task out of circular thinking and forces a clean handoff before the context window fills. |
+| [`management-talk`](skills/productivity/management-talk/SKILL.md) | Rewrites engineer-to-engineer content for a VP / PM / release-manager audience, shaped per channel. |
+| [`web-quality-audit`](skills/web/web-quality-audit/SKILL.md) | One pass over performance, a11y, SEO, and best practices. |
+| [`dgx-spark-model-deployer`](skills/nvidia/dgx-spark-model-deployer/SKILL.md) | Verified deploy bundles for HF/NGC models on single or stacked DGX Sparks. |
+
+`debug-mantra`, `post-mortem`, `scrutinize`, `management-talk`, `qwen-agent`, and
+`qwenchance` are vendored from [thananon/9arm-skills](https://github.com/thananon/9arm-skills).
+Upstream is the source of truth — see [Updating](#updating).
+
+---
+
+## Subagents
+
+Invoke with `@name` or via the Agent tool.
+
+| Agent | Focus |
+|---|---|
+| [`@fullstack-developer`](agents/fullstack-developer.md) | End-to-end app development |
+| [`@frontend-developer`](agents/frontend-developer.md) | React/Vue/Angular, UI/UX, a11y |
+| [`@backend-developer`](agents/backend-developer.md) | Node/Python/Go, APIs, microservices |
+| [`@nextjs-developer`](agents/nextjs-developer.md) | App Router, Server Components, route handlers |
+| [`@typescript-pro`](agents/typescript-pro.md) | Advanced types, generics, enterprise patterns |
+| [`@python-pro`](agents/python-pro.md) | asyncio, decorators, generators |
+| [`@rust-engineer`](agents/rust-engineer.md) | Ownership, borrowing, async, systems |
+| [`@api-designer`](agents/api-designer.md) | REST/GraphQL/WS design, OpenAPI |
+| [`@database-administrator`](agents/database-administrator.md) | PostgreSQL, MySQL, MongoDB, tuning |
+| [`@devops-engineer`](agents/devops-engineer.md) | CI/CD, IaC, monitoring, cloud ops |
+| [`@kubernetes-specialist`](agents/kubernetes-specialist.md) | Clusters, deployments, K8s-native design |
+| [`@architect-reviewer`](agents/architect-reviewer.md) | System design review, technical debt |
+| [`@security-auditor`](agents/security-auditor.md) | Vulnerability scanning, compliance |
+| [`@penetration-tester`](agents/penetration-tester.md) | Ethical hacking, vulnerability assessment |
+| [`@llm-architect`](agents/llm-architect.md) | Prompt engineering, RAG, agent design |
+| [`@project-manager`](agents/project-manager.md) | Agile/Scrum, planning, tracking |
+| [`@productivity-specialist`](agents/productivity-specialist.md) | Workflow optimization, automation |
+
+---
+
+## Slash commands
+
+Each takes `$ARGUMENTS` — a file, route, component, or description.
+
+| Command | Does |
+|---|---|
+| [`/ui`](commands/ui.md) | Generate a polished React + Tailwind component |
+| [`/ux`](commands/ux.md) | UX/UI review and improvement pass |
+| [`/design`](commands/design.md) | Full-page design audit, then apply the fixes |
+| [`/responsive`](commands/responsive.md) | Make a component work across every breakpoint |
+| [`/a11y`](commands/a11y.md) | WCAG 2.1 AA audit and fix |
+| [`/perf`](commands/perf.md) | Web performance audit and optimization |
+| [`/api`](commands/api.md) | Scaffold a Next.js App Router API route |
+| [`/db`](commands/db.md) | Prisma + PostgreSQL schema, query, migration help |
+| [`/test`](commands/test.md) | Write tests for a file or function |
+| [`/debug`](commands/debug.md) | Systematic root-cause hunt for an error |
+| [`/refactor`](commands/refactor.md) | Clarity refactor with behaviour preserved |
+| [`/deploy`](commands/deploy.md) | Pre-deployment checklist |
+
+> `/api`, `/db`, `/test`, and `/deploy` carry Next.js + Prisma + Vitest assumptions
+> from the project they were written for. Adjust the stack lines before using them
+> on a plain Node or Python repo.
+
+---
+
+## RTK hook
+
+[`hooks/rtk-rewrite.sh`](hooks/rtk-rewrite.sh) is a `PreToolUse` hook for `Bash` that
+rewrites commands to their [rtk](https://github.com/rtk-ai/rtk) equivalents, cutting
+60–90% of the tokens a raw `git log` or `ls -R` would spend.
+
+It is a **thin delegating hook** — every rewrite rule lives in the Rust binary
+(`rtk rewrite`), not in the shell script, so the script rarely changes:
+
+| `rtk rewrite` exit | Hook does |
+|---|---|
+| `0` + stdout | Rewrite found, no permission rule matched → rewrite and auto-allow |
+| `1` | No RTK equivalent → pass the command through untouched |
+| `2` | Deny rule matched → pass through, Claude Code's native deny handles it |
+| `3` + stdout | Ask rule matched → rewrite, but let Claude Code prompt the user |
+
+Requires `rtk >= 0.23.0` and `jq`. If either is missing the hook warns once on
+stderr and exits cleanly — it never silently swallows a command.
+
+`scripts/link-skills.sh` deliberately does **not** install this hook, because the
+version on a working machine is often ahead of the repo. Copy it explicitly
+(INSTALL.md step 3) and check `rtk-hook-version:` on line 2 before overwriting.
+
+---
+
+## Repo layout
+
+```
+.claude-plugin/plugin.json   generated manifest (skills + agents + commands)
+agents/                      17 subagent definitions
+commands/                    12 slash commands
+configs/                     settings.json snippet, hook reference, RTK guide
+hooks/rtk-rewrite.sh         RTK PreToolUse hook (v3)
+scripts/link-skills.sh       installer  → ~/.claude/
+scripts/gen-docs.py          regenerates plugin.json + bucket READMEs
+scripts/update-from-github.sh
+skills/<bucket>/<name>/SKILL.md
+tools/mcp/*.json             MCP server configs (GitHub, Postgres, Exa, Slack, …)
+tools/rtk/                   RTK notes and hook variants
 ```
 
-### Step 3: Install Skills (Symlink)
-
-```bash
-cd ~/.claude/plugins/ClaudeSkills-Neronain
-./scripts/link-skills.sh
-```
-
-### Step 4: Enable Plugins in `~/.claude/settings.json`
-
-```json
-{
-  "enabledPlugins": {
-    "ruflo-core@ruflo": true,
-    "ruflo-swarm@ruflo": true,
-    "ruflo-autopilot@ruflo": true,
-    "ruflo-intelligence@ruflo": true,
-    "ruflo-security-audit@ruflo": true,
-    "ruflo-testgen@ruflo": true,
-    "ruflo-docs@ruflo": true,
-    "claude-code-settings@feiskyer/claude-code-settings": true
-  },
-  "extraKnownMarketplaces": {
-    "ruflo": {
-      "source": {
-        "source": "directory",
-        "path": "~/.claude/ruflo"
-      },
-      "autoUpdate": false
-    },
-    "neronain/ClaudeSkills-Neronain": {
-      "source": {
-        "source": "directory",
-        "path": "~/.claude/plugins/ClaudeSkills-Neronain"
-      },
-      "autoUpdate": false
-    }
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/plugins/ClaudeSkills-Neronain/hooks/rtk-rewrite.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### Step 5: Restart Claude Code
-
-## Available Skills
-
-### 9arm Skills (4 skills) - Daily Workflow
-
-| Skill | Category | When to Use |
-|-------|----------|-------------|
-| `/debug-mantra` | Engineering | Start any debugging session |
-| `/scrutinize` | Engineering | PR review, code audit |
-| `/post-mortem` | Engineering | Document bug fixes |
-| `/management-talk` | Productivity | Convert tech content for leadership |
-
-### Ruflo Skills (11 skills) - Advanced Workflows
-
-| Skill | Description |
-|-------|-------------|
-| `init-project` | Initialize new projects with MCP tools |
-| `ruflo-doctor` | Health checks and auto-repair |
-| `swarm-init` | Multi-agent coordinated work |
-| `autopilot-loop` | Autonomous task completion |
-| `autopilot-predict` | Predict optimal next actions |
-| `intelligence-route` | Neural task routing |
-| `neural-train` | Train learned patterns |
-| `security-scan` | Full security audits |
-| `dependency-check` | CVE scanning |
-| `tdd-workflow` | TDD London School |
-| `doc-gen` | Documentation generation |
-
-### feiskyer Skills (14 skills) - Utilities
-
-- `autonomous-skill`, `codex-skill`, `command-creator`, `deep-research`
-- `eureka`, `github-fix-issue`, `github-review-pr`, `gpt-image-skill`
-- `kiro-skill`, `nanobanana-skill`, `reflection`, `skill-creator`
-- `spec-kit-skill`, `translate`, `youtube-transcribe-skill`
-
-### Official Plugins (New!)
-
-#### PR Review Toolkit (6 agents) - Automated Code Review
-
-| Skill | Description |
-|-------|-------------|
-| `/code-reviewer` | General code review for project guidelines |
-| `/code-simplifier` | Code simplification and refactoring |
-| `/comment-analyzer` | Code comment accuracy and maintainability |
-| `/pr-test-analyzer` | Test coverage quality and completeness |
-| `/silent-failure-hunter` | Error handling and silent failures |
-| `/type-design-analyzer` | Type design quality and invariants |
-
-#### CLAUDE.md Management
-
-| Skill | Description |
-|-------|-------------|
-| `/claude-md-improver` | Audit and improve CLAUDE.md files |
-| `/revise-claude-md` | Capture session learnings into CLAUDE.md |
-
-#### Hookify - Automation Rules
-
-| Skill | Description |
-|-------|-------------|
-| `/hookify` | Create hooks from conversation patterns |
-| `/hookify:configure` | Configure rules interactively |
-| `/hookify:list` | List all active rules |
-| `/hookify:help` | Get hookify help |
-
-#### Feature Development
-
-| Skill | Description |
-|-------|-------------|
-| `/feature-dev` | 7-phase feature development workflow |
-
-#### Code Review
-
-| Skill | Description |
-|-------|-------------|
-| `/code-review` | Automated PR review with multiple agents |
-
-#### Claude Code Setup
-
-| Skill | Description |
-|-------|-------------|
-| `/claude-automation-recommender` | Recommend automations (hooks, subagents, skills) |
-
-## MCP Tools
-
-| Tool | Description | Setup |
-|------|-------------|-------|
-| **github** | GitHub issues, PRs, repos, code search | Add GitHub token |
-| **postgres** | PostgreSQL queries, schema info | Add DATABASE_URL |
-| **exa** | Web search with Exa AI | Add EXA_API_KEY |
-| **perplexity** | AI-powered search | Add PERPLEXITY_API_KEY |
-| **notion** | Read/write Notion pages, databases | Add NOTION_API_KEY |
-| **slack** | Send messages, read channels | Add SLACK_BOT_TOKEN |
-| **google-maps** | Location search, directions | Add GOOGLE_API_KEY |
-| **google-search** | Web search with Google | Add API keys |
-
-See `tools/mcp/` for configurations.
-
-## Hooks
-
-| Hook | Description | Location |
-|------|-------------|----------|
-| **RTK Rewrite** | Auto-wraps bash with RTK for 80% token savings | `hooks/rtk-rewrite.sh` |
-
-See `configs/` for hook documentation.
-
-## Available Tools
-
-### RTK - Rust Token Killer
-
-**60-90% token savings** on LLM operations
-
-**Key Commands:**
-- `rtk git status` - Filtered git status (~90% savings)
-- `rtk pnpm list` - Compact dependency tree (~70% savings)
-- `rtk cargo test` - Failures only (~90% savings)
-
-**Auto-Rewrite:**
-- `git status` → `rtk git status` (transparent)
-- `npm list` → `rtk pnpm list` (transparent)
-
-## Quick Start Commands
-
-```bash
-# Debugging
-/debug-mantra
-
-# Code Review
-/scrutinize
-/post-mortem
-
-# Automated PR Review (Official Plugin)
-/code-review
-/code-reviewer
-/code-simplifier
-
-# Feature Development (Official Plugin)
-/feature-dev
-
-# CLAUDE.md Management (Official Plugin)
-/claude-md-improver
-/revise-claude-md
-
-# Hookify - Create Automation Rules (Official Plugin)
-/hookify
-
-# Leadership Updates
-/management-talk
-
-# TDD
-/tdd-workflow
-
-# Documentation Gen
-/doc-gen
-
-# Connect (Composio SaaS)
-/connect slack send-message --channel "#general" --text "Hello!"
-/connect github create-issue --repo "owner/repo" --title "Bug"
-/connect jira create-issue --project "PROJ" --summary "..."
-/connect gmail send-email --to "user@example.com" --subject "Subject"
-
-# Playwright (Browser Automation)
-/playwright open https://example.com
-/playwright click "text=Get Started"
-/playwright fill "#email" "test@example.com"
-/playwright screenshot /tmp/page.png
-
-# Security Auditor
-/security-auditor code ./src/api
-/security-auditor deps package.json
-/security-auditor secrets ./
-/security-auditor compliance gdpr
-
-# 17 Specialized Agents (New!)
-@fullstack-developer Create a REST API for user management
-@typescript-pro Implement a generic repository pattern
-@python-pro Build async HTTP client
-@rust-engineer Create ownership patterns
-@nextjs-developer Set up App Router with Server Components
-@frontend-developer Build accessible React component
-@backend-developer Design database schema
-@api-designer Create OpenAPI specification
-@devops-engineer Set up CI/CD pipeline
-@kubernetes-specialist Create deployment manifest
-@database-administrator Optimize PostgreSQL queries
-@llm-architect Build RAG pipeline
-@security-auditor Perform code security audit
-@penetration-tester Test web application security
-@architect-reviewer Review system design
-@project-manager Plan sprint backlog
-@productivity-specialist Design workflow automation
-
-## Requirements
-
-- **Node.js**: 20+
-- **npm**: 9+
-- **Git**: Latest
-- **Homebrew**: Latest (for rtk)
-- **rtk**: >= 0.23.0
-- **Claude Code**: 4.5+
+---
 
 ## Updating
 
 ```bash
-cd ~/.claude/plugins/ClaudeSkills-Neronain
+cd ~/claude/ClaudeSkills-Neronain
 git pull
-./scripts/link-skills.sh  # If any skills changed
+./scripts/link-skills.sh --force     # --dry-run first if unsure
 ```
 
-## Troubleshooting
+`--force` never clobbers a symlink in `~/.claude/skills/` — if a skill points at
+`~/9arm-skills`, the installer skips it and says so, so upstream stays upstream.
 
-### Skill not found
-```bash
-# Re-link skills
-cd ~/.claude/plugins/ClaudeSkills-Neronain
-./scripts/link-skills.sh
-
-# Restart Claude Code
-```
-
-### rtk hook not working
-```bash
-# Verify rtk is installed
-which rtk
-rtk --version
-
-# Verify jq is installed
-which jq
-```
-
-### Plugin not loading
-```bash
-# Verify settings.json has correct paths
-cat ~/.claude/settings.json
-
-# Check plugin directory exists
-ls -la ~/.claude/plugins/ClaudeSkills-Neronain/
-```
-
-## Updating Skills from GitHub
-
-To update skills from the official GitHub repositories:
+After adding or editing a skill:
 
 ```bash
-cd ~/.claude/plugins/ClaudeSkills-Neronain
-./scripts/update-from-github.sh
+./scripts/gen-docs.py       # refresh plugin.json + bucket READMEs
+./scripts/gen-docs.py --check   # CI-friendly: exits 1 when docs are stale
 ```
 
-This will clone/update repositories:
-- [ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)
-- [davila7/claude-code-templates](https://github.com/davila7/claude-code-templates)
-- [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents)
-- [rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/awesome-claude-code-toolkit)
-- [anthropics/claude-code](https://github.com/anthropics/claude-code)
-- [gsd-build/get-shit-done](https://github.com/gsd-build/get-shit-done)
-- [FlorianBruniaux/claude-code-ultimate-guide](https://github.com/FlorianBruniaux/claude-code-ultimate-guide)
-- [affaan-m/ECC](https://github.com/affaan-m/ECC)
-- [shareAI-lab/learn-claude-code](https://github.com/shareAI-lab/learn-claude-code)
+Restart Claude Code to pick up new skills, agents, and commands.
 
-## License
+---
 
-MIT
+## Conventions
+
+See [CLAUDE.md](CLAUDE.md) — bucket rules, what must be documented, and what stays
+out of the manifest.

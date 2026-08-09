@@ -1,0 +1,21 @@
+model:
+  id: nvidia/example-nvfp4
+  revision: PINNED_COMMIT
+  served_name: example-nvfp4
+  artifact_type: transformers
+deployment:
+  runtime: vllm
+  topology: single
+  runtime_image: nvcr.io/nvidia/vllm:PINNED_TAG
+  context: 65536
+  max_sequences: 2
+  gpu_memory_utilization: 0.85
+  kv_cache_dtype: fp8
+features:
+  tools:
+    enabled: true
+    parser: VERIFIED_PARSER
+    template: VERIFIED_TEMPLATE
+  reasoning:
+    enabled: false
+  modalities: [text]
