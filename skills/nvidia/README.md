@@ -6,10 +6,10 @@ RAG Blueprint, NeMo, AI-Q, Nemotron, and DGX Spark workflows.
 
 | Skill | What it does |
 |---|---|
-| [`DGX Spark Model Deployer`](dgx-spark-model-deployer/SKILL.md) | Build verified DGX Spark deployment bundles for Hugging Face and NGC models. |
 | [`aiq-deploy`](aiq-deploy/SKILL.md) | Use when asked to install, deploy, run, validate, troubleshoot, or stop NVIDIA AI-Q Blueprint infrastructure. |
 | [`aiq-research`](aiq-research/SKILL.md) | Use when asked to run deep research or AI-Q research through a reachable NVIDIA AI-Q Blueprint backend. |
 | [`data-designer`](data-designer/SKILL.md) | Use when the user wants to create a dataset, generate synthetic data, or build a data generation pipeline. |
+| [`dgx-spark-model-deployer`](dgx-spark-model-deployer/SKILL.md) | Deploy, size, move and repair LLMs on NVIDIA DGX Spark (GB10) fleets with LMDS — fit, push/clone, stacked pairs, start failures, fleet updates. |
 | [`nemo-data-designer-plugin`](nemo-data-designer-plugin/SKILL.md) | Use when the user wants to create a dataset, generate synthetic data, or build a data generation pipeline. |
 | [`nemo-evaluator-plugin`](nemo-evaluator-plugin/SKILL.md) | Use when working on the Evaluator plugin CLI, jobs, SDK-backed specs, metric types, or plugin-owned Evaluator skills. |
 | [`nemo-retriever`](nemo-retriever/SKILL.md) | Use when the user wants to search, query, extract, transcribe, describe, quote, filter, or aggregate across documents — PDFs, scanned forms / images… |

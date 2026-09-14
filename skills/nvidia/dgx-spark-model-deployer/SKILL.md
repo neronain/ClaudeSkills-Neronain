@@ -1,400 +1,79 @@
 ---
-name: DGX Spark Model Deployer
-version: 3.0.0
-description: Build verified DGX Spark deployment bundles for Hugging Face and NGC models.
-when_to_use: Use for model fit analysis, vLLM or llama.cpp controllers, single or stacked Sparks, runtime repair, tool calling, multimodal tests, README, and ZIP delivery.
-argument-hint: "<model URL or ID> [single|stacked|both]"
-user-invocable: true
+name: dgx-spark-model-deployer
+description: Deploy, size, move and repair LLMs on NVIDIA DGX Spark (GB10) fleets with LMDS — fit, push/clone, stacked pairs, start failures, fleet updates.
+when_to_use: Use whenever the user wants a Hugging Face or NGC model running on a DGX Spark or on the LMDS hub/nodes; asks whether a model fits, which slots/context/gpu-util to set, or which model to put on a node; wants to push, clone, restart, swap or remove a model; pastes an LMDS, vLLM or llama.cpp start/download/test error; or asks to update the hub and nodes so they match. Use it even when LMDS is not named but the target is GB10 / DGX Spark.
+argument-hint: "<model URL/ID or bundle slug> [node]"
 ---
 
 # DGX Spark Model Deployer
 
-Build an evidence-backed, model-specific deployment bundle for NVIDIA DGX Spark. Support vLLM, llama.cpp, SGLang, single-node, and multi-node deployments. Do not produce a generic launch command when the exact repository requires custom files, parsers, kernels, or runtime pins.
-
-## When to use
-
-Use this skill when the user:
-
-- provides a Hugging Face, NVIDIA NGC, GitHub, or model repository URL;
-- asks whether a model fits one or more DGX Spark systems;
-- requests a Bash controller, Docker launch, model downloader, cache synchronizer, README, tests, client settings, or ZIP;
-- needs tool calling, reasoning, multimodal, long-context, coding-agent, OpenClaw, Hermes, Claude Code, or VS Code compatibility;
-- provides deployment logs and asks for a repair or revised controller.
-
-Do not use this skill for ordinary CUDA application deployment unrelated to model inference.
-
-## Required outcome
-
-Unless the user asks only for analysis, create a durable bundle:
-
-```text
-<model-slug>/
-├── <model-slug>-single.sh             # single-node controller, when applicable
-├── <model-slug>-stacked.sh            # multi-node controller, when applicable
-├── README.md
-├── SPECIAL_FILES.md                   # required when repository-specific files matter
-├── MODEL_PROFILE.yaml
-├── PACKAGE_SHA256SUMS
-└── optional tests, helpers, or client examples
-```
-
-Also create a ZIP. Link every generated artifact.
-
-A controller should expose the relevant subset of:
-
-```text
-prepare-runtime
-runtime-info
-download
-verify-files
-sync-worker
-verify-worker
-start
-stop
-restart
-status
-logs
-props
-bench
-test-text
-test-reasoning
-test-tools required
-test-tools auto
-test-tool-loop
-test-image
-test-audio
-test-video
-stress
-client-config
-```
-
-## Operating principles
-
-1. Research the exact repository before writing the controller.
-2. Use current primary sources: exact model card, file tree, configs, upstream runtime docs, container registry, and relevant source commits.
-3. Inspect small repository files, not only the README.
-4. Separate verified facts, inference, and unverified community claims.
-5. Choose runtime and topology from evidence, not model-family habit.
-6. Pin model revisions and runtime versions or commits whenever practical.
-7. Keep model files in persistent host storage.
-8. Run GPU checks inside the selected container; do not install host PyTorch merely to test vLLM.
-9. On DGX Spark Docker, prefer `--gpus all`; do not add `--runtime=nvidia` unless the host explicitly requires it.
-10. Validate generated Bash with `bash -n`.
-11. Distinguish static validation from hardware validation.
-12. Treat generated tool calls as untrusted requests. The agent client executes tools, not the inference server.
-
-## Start here
-
-Read these files progressively:
-
-1. [Team environment](references/team-environment.md)
-2. [Research workflow](references/research-workflow.md)
-3. [Runtime decision matrix](references/runtime-decision-matrix.md)
-4. [Controller contract](references/controller-contract.md)
-5. [Special-files checklist](references/special-files-checklist.md)
-6. [Quality gates](references/quality-gates.md)
-7. [Security baseline](references/security.md)
-8. [Troubleshooting](references/troubleshooting.md)
-9. [Delivery contract](references/delivery-contract.md)
-
-Use [MODEL_PROFILE template](templates/MODEL_PROFILE.yaml) as the internal source of truth for each deployment.
-
-## Phase 1 — Resolve the request
-
-Extract without repeating questions already answered:
-
-- exact model URL or ID;
-- requested revision, if any;
-- topology: single, stacked, both, or recommendation needed;
-- desired runtime, if explicitly requested;
-- required modalities and features;
-- target clients and agent frameworks;
-- context, concurrency, port, storage, and network constraints;
-- existing controllers or services that may occupy GPU memory or the API port.
-
-Read `config/team-profile.yaml`. Treat it as a default, not immutable truth. Logs and explicit user statements override it.
-
-## Phase 2 — Research the exact model
-
-Collect and record:
-
-- architecture, total parameters, active parameters, dense versus MoE;
-- quantization format and mixed-precision exclusions;
-- total repository size, indexed tensor size, shard count, and optional artifacts;
-- native and tested context lengths;
-- official or community-tested hardware;
-- required runtime, container, version, branch, PR, or source commit;
-- tool parser and tool chat template;
-- reasoning parser and request-level controls;
-- `trust_remote_code` requirements;
-- image/audio/video processors and projectors;
-- MTP/speculative decoding requirements;
-- attention, MoE, KV-cache, Mamba, or custom kernel requirements;
-- license and commercial-use constraints;
-- known hangs, output corruption, parser failures, or memory limits.
-
-When current web access exists, verify all unstable facts online. Prefer official documentation and source repositories. Treat benchmarks from community posts as environment-specific.
-
-## Phase 3 — Inventory repository files
+LMDS (Local Model Deploy Studio, repo `neronain/AutoDeployDGXProject`) is the tool for this job. Its generated controllers already carry every failure this team has hit on GB10 — port-ownership guards, runtime-architecture checks, KV pinning, crash explanations, live logs and feature tests. Drive LMDS and read its evidence. Do not hand-write launch scripts or `docker run` lines: a hand-made controller silently drops those fixes, and the lesson gets relearned on a customer machine.
 
-Inspect:
+If a machine has no LMDS, install it (`git clone https://github.com/neronain/AutoDeployDGXProject && cd AutoDeployDGXProject && ./install.sh`) rather than improvising.
 
-```text
-config.json
-generation_config.json
-tokenizer_config.json
-tokenizer.json
-chat_template.jinja
-processor_config.json
-preprocessor_config.json
-hf_quant_config.json
-quantization_config.json
-model.safetensors.index.json
-configuration_*.py
-modeling_*.py
-*.gguf
-mmproj*.gguf
-parser plugins
-runtime helper scripts
-calibration files
-backup files
-```
+Match the user's language (this team writes Thai).
 
-Parse safetensors indexes rather than hard-coding shard names. For GGUF, identify whether tokenizer, template, and multimodal metadata are embedded and whether an `mmproj` is required.
+## Know the environment first
 
-Generate `SPECIAL_FILES.md` whenever a file affects correctness, security, parsing, multimodal support, or reproducibility.
+Read `config/team-profile.yaml`. The facts that matter most:
 
-## Phase 4 — Recommend topology and runtime
+- The **hub** is a control plane without a GPU (an OrbStack VM). It holds bundles, the node registry and the web console on port 8600. Run `lmds` there **from `~`**: `lmds deploy` writes to `./bundles` of the current directory, and a second copy of a slug in another bundle root makes later commands pick the wrong one.
+- **Nodes** are reached through the hub: `lmds node run <node> <lmds command>` runs LMDS on the node, `lmds node ctl <node> <slug> <verb>` runs a controller verb. `lmds node list` is the source of truth for node names, IPs and sites.
+- The hub's git checkout (`main`) is the source of truth for code. Hub and nodes must run the same commit.
 
-Use this order:
+## Deploy a model to a node
 
-1. Exact purpose-built runtime named by the model author.
-2. Exact official runtime/container recipe.
-3. Current compatible upstream runtime with verified architecture and parsers.
-4. Pinned community runtime when official support is absent.
-5. A locally built runtime only when required.
+1. **Gather evidence** instead of guessing sizes, parsers or images:
+   ```bash
+   lmds inspect <repo>
+   lmds recipes <repo>
+   lmds plan <repo> --target dgx-spark-single --no-llm --json
+   ```
+   `inspect` gives size, architecture, native context and special files; a recipe is an image + flags + parsers that already ran on GB10. Weights up to ~95 GB fit one Spark; larger needs a stacked pair (`--target dgx-spark-stacked`, see `references/runtime-notes.md`). Embedding and reranker repos are detected automatically (`--task embed` or `--task rerank` overrides).
+2. **Generate on the hub**: `lmds deploy <repo> --target dgx-spark-single --no-llm --yes`. Add `--gguf Q8_0` to pick a GGUF variant and `--name <slug>` when the repo name is long — slugs over 64 characters cannot be pushed.
+3. **Ship it**: `lmds node push <node> <slug> --download` downloads the weights on the node and verifies them. When another node already has the weights, `lmds node clone <slug> --from <a> --to <b>` copies node-to-node over the fastest shared link and verifies — minutes instead of a Hugging Face download.
+4. **Size it before starting**: `lmds node run <node> fit <slug> --slots <n>` shows the RAM picture with every other model on that node counted; apply with `lmds node run <node> set <slug> --fit --slots <n>`. Rules in `references/sizing.md`.
+5. **Start and prove it**: `lmds node run <node> start <slug>`, then `lmds node ctl <node> <slug> test-text` plus the verbs that fit the model — `test-tools`, `test-reasoning`, `test-vision`, `test-embed`, `test-rerank`. A server that answers `/health` is not done until its feature tests pass.
+6. **Keep it**: `lmds node run <node> enable <slug>` turns on autostart. When replacing a model, leave the old bundle and weights in place (or `lmds node run <node> remove <slug> --keep-weights --yes`) so rollback is just a start.
+7. **Report**: endpoint `http://<node-ip>:<port>/v1`, served model id, context per request, slots, RAM used/total, tests passed, what was stopped, and anything clients must change (model id, `max_tokens`).
 
-Common choices:
+## Sizing in one paragraph
 
-- vLLM for ModelOpt/NVFP4, Transformers checkpoints, OpenAI-compatible serving, and structured tool parsers.
-- llama.cpp for GGUF, native quant formats, and compact single-node deployments.
-- SGLang when the exact model card or tested recipe requires its kernels or scheduling.
-- Multi-process, Ray, or another distributed backend only when supported by the exact runtime recipe. Do not force Ray when a tested MP/NCCL path is preferred.
+A DGX Spark has one 121 GB pool shared with the OS; keep about 12 GB free. vLLM's `gpu-memory-utilization` is a fraction of the **whole** pool and is checked against free memory at start, so a leftover `0.85` makes restarts fail as soon as a neighbour model runs. Pin the KV cache (`--kv-cache-memory`) and set gpu-util to what the model needs — `set --fit` does both. Context can never exceed the model's native `max_position_embeddings`: beyond it quality collapses without any error, and LMDS refuses. In llama.cpp `--ctx-size` is a pool shared by all slots, so context per request is ctx ÷ slots. Formulas and measured numbers: `references/sizing.md`.
 
-For one DGX Spark, reserve unified memory for runtime, CUDA buffers, and KV cache. For two or more nodes, account for per-node weights, communication buffers, context, concurrency, and link topology.
-
-## Phase 5 — Design the controller
-
-Read `references/controller-contract.md` and select the nearest template:
-
-- `templates/single-vllm-controller.sh`
-- `templates/stacked-vllm-controller.sh`
-- `templates/single-llamacpp-controller.sh`
-
-Do not copy a prior model's flags without re-verification.
-
-Required qualities:
-
-- editable configuration block near the top;
-- persistent cache or model directory;
-- pinned model revision;
-- runtime lock or digest recording;
-- resumable download;
-- model and special-file verification;
-- clean lifecycle commands;
-- health checks and useful logs;
-- safe defaults for context and concurrency;
-- client configuration;
-- model-specific feature tests;
-- no autostart unless explicitly requested.
-
-For stacked deployments:
-
-- run the controller from the designated master;
-- verify passwordless SSH or the selected orchestration channel;
-- copy only the intended model/runtime assets;
-- compare manifests on every node before start;
-- verify the expected node and GPU count before serving;
-- expose only one API endpoint;
-- preserve logs from every node.
-
-## Phase 6 — Configure features
-
-### Tool calling
-
-Enable auto tool choice only with a verified parser and template. Add tests for:
-
-1. `tool_choice=required`;
-2. `tool_choice=auto`;
-3. a two-turn tool loop with `role=tool`;
-4. malformed or unexpected argument detection.
-
-Keep `parallel_tool_calls=false` until the exact model/runtime passes tests. State any model-specific limitations such as one call at a time or arrays serialized as strings.
-
-### Reasoning
-
-Use the exact reasoning parser or embedded template behavior. Support low/medium/high or thinking on/off only when the model supports it. Ensure the output budget is large enough. Do not expose raw reasoning to end users by default.
-
-### Multimodal
-
-Only advertise modalities verified for the exact checkpoint. Use a dedicated read-only media directory, per-prompt limits, and the correct projector/processor files.
-
-### Long context
-
-Start with a practical baseline. Reserve input, output, template, tool-schema, image-token, and reasoning headroom. Increase context one step at a time and repeat stress tests.
-
-### Performance
-
-Treat these as model-specific:
-
-```text
-FP8 or quantized KV
-prefix caching
-chunked prefill
-CUDA graphs / eager mode
-attention backend
-MoE backend
-Mamba cache dtype
-expert parallelism
-MTP / speculative decoding
-custom all-reduce
-```
+## Changing something that already runs
 
-## Phase 7 — Validate
+Many nodes serve customers. Before a restart check recent use (`lmds node ctl <node> <slug> logs 200`) or ask the owner, and prefer quiet hours. `lmds set` only saves settings; the running server keeps its old values until restart (the console shows "restart to apply"). Re-run the tests afterwards and never delete weights you might roll back to.
 
-Run:
+## When something fails
 
-```bash
-bash -n <controller>.sh
-python3 scripts/validate_bundle.py <bundle-directory>
-```
+1. `lmds node run <node> doctor <slug>` names the cause and the fix.
+2. Read the controller's own diagnosis: failed starts end with a "สาเหตุจาก log" line, and `lmds node ctl <node> <slug> logs -f` streams live.
+3. Find the symptom in `references/troubleshooting.md` before changing anything, and change one variable at a time.
 
-When hardware access exists, test:
+## Updating the hub and nodes
 
-```text
-host GPU
-fresh-container GPU
-runtime version/parser inventory
-download
-file verification
-start
-health
-models endpoint
-text
-reasoning
-tools required
-tools auto
-tool-loop continuation
-multimodal features
-stress
-stop
-restart
-```
+"Matches the hub" means three things on every node: the same LMDS commit, controllers rendered from the current templates, and a runtime (llama.cpp build or image) that knows every deployed model's architecture. An unknown axis is not a pass. The update sequence and checks are in `references/fleet-ops.md`; code changes always end with commit + push, hub install, node rollout and `lmds fleet check`.
 
-Record failures and exact fixes in the README. Never state that the deployment was hardware-tested when only static checks ran.
+## Guardrails
 
-## Phase 8 — Deliver
-
-Provide:
+- Never type sudo passwords, HF tokens or API keys for the user — print the command and let the owner run it.
+- Customer machines are read-only until the owner says go, and every change keeps a rollback path.
+- Say "hardware-validated" only after the tests ran on that node; otherwise say "static-validated".
+- Uncensored and red-team models are for authorized security work only.
+- Debug vLLM inside its container; do not install host PyTorch or random packages.
 
-- recommendation and key tradeoffs;
-- exact selected model/revision/runtime/topology;
-- artifact links;
-- first-run commands;
-- default context/concurrency;
-- special-file notes;
-- acceptance-test sequence;
-- client settings;
-- limitations and validation status.
+## Skill files
 
-Keep the final response practical. Do not bury the download links.
-
-## Repair workflow
-
-When logs are provided:
-
-1. preserve the exact failing command and environment;
-2. classify the failure: host GPU, Docker GPU, image, architecture, kernel, model files, parser/template, memory, distributed transport, or client protocol;
-3. change one causal variable at a time;
-4. update controller, README, and troubleshooting notes together;
-5. re-run static validation;
-6. deliver a new versioned ZIP.
-
-## Security
-
-For agent or team use:
-
-- never provide unrestricted shell/filesystem/network access by default;
-- validate paths and JSON arguments;
-- prevent symlink escape;
-- use command and network allowlists;
-- isolate credentials;
-- set execution time and output limits;
-- confirm destructive actions;
-- log prompts, responses, tool calls, and execution results;
-- treat third-party skills, model remote code, and repository helper scripts as untrusted until reviewed.
-
-## Supporting tools
-
-Use these helpers when useful:
-
-```bash
-python3 scripts/scaffold_bundle.py --help
-python3 scripts/inventory_snapshot.py --help
-python3 scripts/hash_manifest.py --help
-python3 scripts/validate_bundle.py --help
-python3 scripts/validate_skill.py .
-```
-
-## Claude Code notes
-
-Store personal installations at `~/.claude/skills/dgx-spark-model-deployer/` or project installations at `.claude/skills/dgx-spark-model-deployer/`.
-
-Use WebSearch/WebFetch for current research and Bash/Read/Write/Edit for artifacts. Do not pre-approve destructive shell commands. Generate files in the user's repository or requested output directory, then run the validators.
-
-
-## Controller portability standard
-
-Every newly generated controller must follow these rules:
-
-```text
-No pure numeric Bash literal may contain underscore separators.
-Context must be overridable by environment and `--context`.
-API port must be overridable by environment and `--port`.
-Bind address and advertised client address must be separate.
-Single-node controllers must not hard-code a master or cluster IP.
-Advertised IP selection must prefer explicit IP/interface and route source.
-Stacked controllers must keep cluster transport IPs separate from the public API URL.
-```
-
-Forbidden Bash arithmetic:
-
-```bash
-(( model_size > 25_000_000_000 ))
-```
-
-Correct forms:
-
-```bash
-MODEL_SIZE_BYTES="25000000000"
-[[ "$actual_size" == "$MODEL_SIZE_BYTES" ]]
-```
-
-For GGUF artifacts, prefer exact byte size, the `GGUF` magic header, and SHA-256 over a lower-bound-only check.
-
-Every controller should support:
-
-```text
---context
---port
---bind
---advertise-ip
---interface
---client-input
---client-output
-network-info
-```
-
-Avoid selecting the first result from `hostname -I` except as a final fallback. Prefer the source address from `ip route get`, or a user-selected interface.
-
-With `set -o pipefail`, avoid `producer | grep -q` feature checks because the producer can receive SIGPIPE after an early match. Capture output first or use direct inspect/test APIs.
+| File | Read when |
+|---|---|
+| `config/team-profile.yaml` | Always, first |
+| `references/sizing.md` | Choosing slots/context/KV, or putting two models on one Spark |
+| `references/runtime-notes.md` | Picking engine, image or parsers; stacked pairs; MTP; multimodal |
+| `references/fleet-ops.md` | Hub and node access, clone, safe swaps, updates and rollouts |
+| `references/troubleshooting.md` | Any error message or odd behaviour |
+| `references/research-workflow.md` | A model with no recipe or an unfamiliar architecture |
+| `references/special-files-checklist.md` | Remote code, projectors, templates or parser plugins in the repo |
+| `references/security.md` | Exposing endpoints or wiring agents and tools |
+| `scripts/check_lmds_commands.py` | After an LMDS upgrade — confirms every `lmds` command in this skill still exists |
+| `scripts/validate_skill.py` | After editing this skill |

@@ -46,7 +46,7 @@ they never drift from what Claude actually reads.
 | [`qwenchance`](skills/productivity/qwenchance/SKILL.md) | Breaks a long task out of circular thinking and forces a clean handoff before the context window fills. |
 | [`management-talk`](skills/productivity/management-talk/SKILL.md) | Rewrites engineer-to-engineer content for a VP / PM / release-manager audience, shaped per channel. |
 | [`web-quality-audit`](skills/web/web-quality-audit/SKILL.md) | One pass over performance, a11y, SEO, and best practices. |
-| [`dgx-spark-model-deployer`](skills/nvidia/dgx-spark-model-deployer/SKILL.md) | Verified deploy bundles for HF/NGC models on single or stacked DGX Sparks. |
+| [`dgx-spark-model-deployer`](skills/nvidia/dgx-spark-model-deployer/SKILL.md) | Deploy, size, clone and repair LLMs on DGX Spark (GB10) fleets with LMDS. |
 
 `debug-mantra`, `post-mortem`, `scrutinize`, `management-talk`, `qwen-agent`, and
 `qwenchance` are vendored from [thananon/9arm-skills](https://github.com/thananon/9arm-skills).

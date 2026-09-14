@@ -1,48 +1,18 @@
-# Research Workflow
+# Research workflow (models without a recipe)
 
-## Evidence table
+Run `lmds recipes <repo>` and `lmds inspect <repo>` first. A recipe already encodes the image, flags and parsers that ran on GB10 — research only what it does not cover.
 
-Create an internal table with:
+| Area | Evidence | Where |
+|---|---|---|
+| Architecture, active parameters | `config.json`, model card | Repo |
+| Native context | `max_position_embeddings`, `rope_scaling` | `config.json` |
+| Quantization | `hf_quant_config.json`, `quantization_config` | Repo |
+| Size and shards | Index and file sizes | `lmds inspect` |
+| Runtime support | Architecture in the vLLM registry or llama.cpp `llm-arch` | Runtime source, controller `check-runtime` |
+| Parsers | Model card, chat-template markers | Repo, runtime docs |
+| MTP, projector, remote code | Index keys, `mmproj*`, `modeling_*.py` | Repo |
+| Known failures | Issues and community recipes (label them as community) | GitHub, HF discussions |
 
-| Area | Exact evidence | Source | Confidence |
-|---|---|---|---|
-| Architecture | | | |
-| Active parameters | | | |
-| Weight size | | | |
-| Context | | | |
-| Runtime | | | |
-| Tool parser | | | |
-| Reasoning parser | | | |
-| Special files | | | |
-| Tested hardware | | | |
-| Known failures | | | |
-| License | | | |
+Label every claim: "verified on this fleet", "officially documented", "community-reported" or "inferred". Runtime tags, parser names and kernel support change weekly, so verify them at task time.
 
-## Search order
-
-1. Exact model card.
-2. Repository tree and pinned revision.
-3. Small config/template/quantization files.
-4. Upstream/base model.
-5. Official runtime documentation.
-6. Runtime source code and parser registry.
-7. Official hardware recipe.
-8. Community benchmarks and issue reports.
-
-## Freshness
-
-Runtime tags, parser names, PRs, commits, container manifests, licenses, and known bugs are unstable. Verify them at task time.
-
-## Source quality
-
-Prefer official model authors, NVIDIA, vLLM, llama.cpp, SGLang, Hugging Face repository files, and source commits. Community posts may demonstrate feasibility but do not establish universal performance or stability.
-
-## Claims
-
-Use language such as:
-
-- "Officially documented"
-- "Verified by the exact model card"
-- "Reported by a community recipe"
-- "Inferred from indexed tensor size"
-- "Not yet verified on DGX Spark"
+Once a model passes its tests on hardware, add it to `src/lmds/recipes/catalog.yaml` in the LMDS repo with `validated_on`, so the next deploy gets the working settings automatically.

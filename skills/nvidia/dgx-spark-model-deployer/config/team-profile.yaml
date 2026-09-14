@@ -1,36 +1,28 @@
-profile_version: 1
-team_name: neronain-dgx-spark
+# Environment defaults for this team. Explicit user values and live command output win over this file.
+profile_version: 2
 language: th
 
-master:
-  host: 10.100.152.1
-  ssh_user: neronain
-  hostname: gigabyte01
+hub:
+  orbstack_vm: Autodeploy            # from the Mac: orb -m Autodeploy bash -lc 'cd ~ && lmds …'
+  address: 192.168.139.92
+  web_console: http://192.168.139.92:8600   # token in ~/.config/lmds/web-token on the hub
+  repo: ~/AutoDeployDGXProject       # git main = source of truth, GitHub neronain/AutoDeployDGXProject
+  cli: ~/.local/bin/lmds
+  run_from: "~"                      # lmds deploy writes ./bundles relative to the current directory
+  has_gpu: false
 
-workers:
-  - host: 10.100.152.2
-    ssh_user: neronain
+nodes:
+  registry: lmds node list           # names, IPs and sites come from the registry, not from this file
+  lab_pair:                          # the owner's own stacked pair — safe for experiments
+    head: spark-head                 # cluster IP 10.100.152.1
+    worker: spark-worker             # cluster IP 10.100.152.2
+  customer_sites_read_only: true     # change customer nodes only after the owner agrees
 
-paths:
-  home: /home/neronain
-  huggingface_cache: /home/neronain/.cache/huggingface
-  model_root: /home/neronain/models
-  source_root: /home/neronain/src
+targets:
+  single: dgx-spark-single
+  stacked: dgx-spark-stacked
 
-api:
-  host: 0.0.0.0
-  port: 8000
-  require_key_on_shared_network: true
-
-docker:
-  gpu_arguments: ["--gpus", "all"]
-  network_mode: host
-  ipc_mode: host
-  use_runtime_nvidia: false
-
-defaults:
-  no_autostart: true
-  persistent_cache: true
-  full_hash_for_stacked: true
-  static_validation_required: true
-  package_zip_required: true
+memory:
+  total_gb: 121
+  os_reserve_gb: 12
+  usable_gb: 109
