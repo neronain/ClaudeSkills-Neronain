@@ -19,6 +19,7 @@ Read `config/team-profile.yaml`. The facts that matter most:
 
 - The **hub** is a control plane without a GPU (an OrbStack VM). It holds bundles, the node registry and the web console on port 8600. Run `lmds` there **from `~`**: `lmds deploy` writes to `./bundles` of the current directory, and a second copy of a slug in another bundle root makes later commands pick the wrong one.
 - **Nodes** are reached through the hub: `lmds node run <node> <lmds command>` runs LMDS on the node, `lmds node ctl <node> <slug> <verb>` runs a controller verb. `lmds node list` is the source of truth for node names, IPs and sites.
+- **Running on a node itself** (for example an OpenClaw agent on the Spark), the hub is usually out of reach. Run the same LMDS commands locally without the `node run <node>` prefix (`lmds ps`, `lmds fit <slug> --slots 3`, `lmds logs <slug> -f`) and controller verbs through the bundle's script: `~/bundles/<slug>/<slug>-single.sh test-tools` (`-stacked.sh` on a stacked head). New models, clones and fleet updates belong to the hub — hand the owner the hub command instead of improvising locally.
 - The hub's git checkout (`main`) is the source of truth for code. Hub and nodes must run the same commit.
 
 ## Deploy a model to a node

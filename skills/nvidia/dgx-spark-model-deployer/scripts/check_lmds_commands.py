@@ -4,7 +4,7 @@
 LMDS changes often. A skill that cites a renamed command or flag sends Claude down a dead end,
 so run this after upgrading LMDS:
 
-  python3 scripts/check_lmds_commands.py              # `lmds` on PATH, else the Autodeploy OrbStack VM
+  python3 scripts/check_lmds_commands.py              # `lmds` on PATH or in ~/.local/bin, else the Autodeploy OrbStack VM
   python3 scripts/check_lmds_commands.py --via "orb -m Autodeploy bash -lc" --lmds "~/.local/bin/lmds"
 
 Exit 0 = everything exists, 1 = something is missing (listed), 2 = LMDS could not be reached.
@@ -92,8 +92,8 @@ def main() -> int:
 
     if args.via:
         via, lmds = shlex.split(args.via), args.lmds or "~/.local/bin/lmds"
-    elif shutil.which("lmds"):
-        via, lmds = None, args.lmds or "lmds"
+    elif local := shutil.which("lmds") or next((str(p) for p in [Path.home() / ".local/bin/lmds"] if p.exists()), None):
+        via, lmds = None, args.lmds or local  # a node: non-login shells often lack ~/.local/bin on PATH
     elif shutil.which("orb"):
         via, lmds = ["orb", "-m", "Autodeploy", "bash", "-lc"], args.lmds or "~/.local/bin/lmds"
     else:
